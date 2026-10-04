@@ -1,0 +1,15 @@
+# Declares the tags used with `@Tags([...])` so the runner does not warn about
+# an unknown tag on every run.
+tags:
+  golden:
+    # Golden images are rasterized by the host's font engine, so the bytes
+    # differ between macOS and Linux CI. These tests are therefore LOCAL /
+    # macOS only: CI (.github/workflows/quality.yml) runs
+    #   flutter test --exclude-tags golden
+    # and so should any other non-macOS run.
+    description: Platform-sensitive golden image tests; run locally on macOS.
+  network:
+    # Talks to YouTube for real (engine smoke tests). Never in CI: results
+    # depend on the network, YouTube's current client rules and rate limits.
+    #   flutter test --tags network        # run on purpose, locally
+    description: Hits the real network; run locally on purpose only.

@@ -1,0 +1,48 @@
+# This file configures the analyzer, which statically analyzes Dart code to
+# check for errors, warnings, and lints.
+#
+# CI runs `flutter analyze --fatal-infos` (.github/workflows/quality.yml), so
+# every rule below is a merge gate: a new finding of ANY severity fails the PR.
+# Suppress a single justified site with `// ignore: rule_name` and a reason,
+# never by switching a rule off here.
+#
+# Ported from Track View, with its "wave 2" rules switched on from the first
+# commit: they were deferred there only because hundreds of legacy sites needed
+# a judgment call each. A new repo has none.
+analyzer:
+  language:
+    strict-casts: true
+    strict-inference: true
+    strict-raw-types: true
+  exclude:
+    - build/**
+    - android/**
+    - ios/**
+    - macos/**
+    - windows/**
+    # Phase-0 throwaway experiments; never imported by lib/.
+    - spike/**
+    # Generated code is not ours to lint: build_runner / gen-l10n rewrite it.
+    # A broken generated file still fails compilation in `flutter test`.
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"
+    - lib/l10n/app_localizations*.dart
+  errors:
+    # A Future nobody awaits is how a failed download step disappears silently.
+    unawaited_futures: error
+include: package:flutter_lints/flutter.yaml
+
+linter:
+  # flutter_lints already enables avoid_print and use_key_in_widget_constructors.
+  rules:
+    - always_declare_return_types
+    - avoid_dynamic_calls
+    - cancel_subscriptions
+    - close_sinks
+    - prefer_const_constructors
+    - prefer_const_literals_to_create_immutables
+    - prefer_final_locals
+    - prefer_single_quotes
+    - unawaited_futures
+    - unnecessary_null_checks
+    - use_build_context_synchronously

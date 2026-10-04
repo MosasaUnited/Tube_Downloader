@@ -1,0 +1,7 @@
+name: engine_probe
+description: Throwaway Phase-0 probe — which YouTube client yields fetchable adaptive streams. Not shipped.
+publish_to: none
+environment:
+  sdk: ^3.9.0
+dependencies:
+  youtube_explode_dart: ^3.1.0

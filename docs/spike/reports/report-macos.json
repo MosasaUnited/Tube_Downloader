@@ -1,0 +1,144 @@
+{
+  "platform": "macos",
+  "osVersion": "Version 27.0.1 (Build 26A434)",
+  "startedAt": "2026-10-04T16:41:34.069761",
+  "fixtures": [
+    {
+      "id": "R6MlUcmOul8",
+      "title": "Tears of Steel - Blender VFX Open Movie",
+      "durationS": 734,
+      "manifestMs": 8875,
+      "video": {
+        "quality": "1080p",
+        "codec": "avc1.640028",
+        "bytes": 180816350
+      },
+      "audio": {
+        "kbps": 128,
+        "codec": "mp4a.40.2",
+        "bytes": 11883258
+      },
+      "videoDownload": {
+        "bytes": 180816350,
+        "seconds": 1351.409,
+        "mbPerS": 0.13
+      },
+      "audioDownload": {
+        "bytes": 11883258,
+        "seconds": 26.99,
+        "mbPerS": 0.42
+      },
+      "merge": {
+        "ok": true,
+        "rc": 0,
+        "ms": 593
+      },
+      "probe": {
+        "ok": true,
+        "streams": [
+          "video:h264@800p",
+          "audio:aac"
+        ],
+        "durationS": 734.214966,
+        "sizeBytes": 192872592,
+        "durationDeltaS": 0.214966000000004
+      },
+      "mp3": {
+        "ok": true,
+        "ms": 23744,
+        "probe": {
+          "ok": true,
+          "streams": [
+            "audio:mp3"
+          ],
+          "durationS": 734.214966,
+          "sizeBytes": 17622759,
+          "durationDeltaS": 0.214966000000004
+        }
+      }
+    },
+    {
+      "id": "eRsGyueVLvQ",
+      "title": "Sintel - Open Movie by Blender Foundation",
+      "durationS": 888,
+      "manifestMs": 6476,
+      "video": {
+        "quality": "1080p",
+        "codec": "avc1.640028",
+        "bytes": 170210373
+      },
+      "audio": {
+        "kbps": 128,
+        "codec": "mp4a.40.2",
+        "bytes": 14373564
+      },
+      "videoDownload": {
+        "bytes": 170210373,
+        "seconds": 537.837,
+        "mbPerS": 0.3
+      },
+      "audioDownload": {
+        "bytes": 14373564,
+        "seconds": 85.028,
+        "mbPerS": 0.16
+      },
+      "merge": {
+        "ok": true,
+        "rc": 0,
+        "ms": 547
+      },
+      "probe": {
+        "ok": true,
+        "streams": [
+          "video:h264@818p",
+          "audio:aac"
+        ],
+        "durationS": 888.093605,
+        "sizeBytes": 184792469,
+        "durationDeltaS": 0.09360500000002503
+      }
+    },
+    {
+      "id": "aqz-KE-bpKQ",
+      "title": "Big Buck Bunny 60fps 4K - Official Blender Foundation Short Film",
+      "durationS": 635,
+      "manifestMs": 3056,
+      "video": {
+        "quality": "1080p",
+        "codec": "avc1.64002a",
+        "bytes": 257619653
+      },
+      "audio": {
+        "kbps": 128,
+        "codec": "mp4a.40.2",
+        "bytes": 10271496
+      },
+      "videoDownload": {
+        "bytes": 257619653,
+        "seconds": 530.741,
+        "mbPerS": 0.46
+      },
+      "audioDownload": {
+        "bytes": 10271496,
+        "seconds": 109.233,
+        "mbPerS": 0.09
+      },
+      "merge": {
+        "ok": true,
+        "rc": 0,
+        "ms": 794
+      },
+      "probe": {
+        "ok": true,
+        "streams": [
+          "video:h264@1080p",
+          "audio:aac"
+        ],
+        "durationS": 634.62458,
+        "sizeBytes": 268281285,
+        "durationDeltaS": 0.3754199999999628
+      }
+    }
+  ],
+  "finishedAt": "2026-10-04T17:26:30.830110"
+}

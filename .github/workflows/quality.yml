@@ -1,0 +1,96 @@
+# The merge gate. A PR must pass every step below. What actually stops a red
+# PR from merging is `main`'s branch protection requiring this job ("quality");
+# a failing step alone only colours the run.
+#
+# The Flutter version is PINNED, not "latest stable": `--fatal-infos` fails on
+# any new diagnostic, and SDK releases add them. Upgrading Flutter is one
+# deliberate commit that bumps this pin, fixes the new diagnostics and
+# re-records the goldens on macOS.
+name: Quality gate
+
+on:
+  pull_request:
+
+# A new push to the same PR makes the running check stale.
+concurrency:
+  group: quality-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: quality
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          # The review gate diffs against the merge-base with the target
+          # branch, so it needs the full history, not a shallow clone.
+          fetch-depth: 0
+
+      - name: Install Flutter
+        uses: flutter-actions/setup-flutter@v2
+        with:
+          channel: stable
+          version: 3.47.5
+          cache: true
+          cache-sdk: true
+
+      - name: Get Flutter dependencies
+        id: deps
+        run: flutter pub get
+
+      # Generated files are not committed: build_runner (freezed, json,
+      # drift) and gen-l10n run before anything reads lib/.
+      - name: Generate code
+        id: gen
+        if: ${{ !cancelled() && steps.deps.outcome == 'success' }}
+        run: |
+          flutter gen-l10n
+          dart run build_runner build --delete-conflicting-outputs
+
+      # From here on every check runs even when an earlier one failed, so a PR
+      # sees all of its problems in one run instead of one per push.
+
+      - name: Format
+        if: ${{ !cancelled() && steps.gen.outcome == 'success' }}
+        run: |
+          git ls-files 'lib/*.dart' 'test/*.dart' \
+            | grep -v -E '(\.(g|freezed)\.dart|/app_localizations(_[a-z]+)?\.dart)$' \
+            | xargs dart format --output=none --set-exit-if-changed
+
+      - name: Analyze
+        if: ${{ !cancelled() && steps.gen.outcome == 'success' }}
+        run: flutter analyze --fatal-infos
+
+      # The house rules on the lines this PR adds. BLOCKING findings fail the
+      # PR; WORTH FIXING and NOTES are printed for the reviewer.
+      - name: Review gate
+        if: ${{ !cancelled() && steps.gen.outcome == 'success' }}
+        run: bash .claude/skills/review-gate/scripts/check.sh --base "origin/${{ github.base_ref }}"
+
+      # Goldens are recorded on macOS and network tests hit YouTube for real
+      # (dart_test.yaml), so both stay local checks.
+      - name: Test
+        if: ${{ !cancelled() && steps.gen.outcome == 'success' }}
+        run: flutter test --exclude-tags golden,network --coverage
+
+      - name: Coverage summary
+        if: ${{ !cancelled() && hashFiles('coverage/lcov.info') != '' }}
+        run: |
+          awk -F: '
+            /^LF:/ { found += $2 }
+            /^LH:/ { hit += $2 }
+            END {
+              pct = found ? 100 * hit / found : 0
+              printf "### Line coverage\n\n%.1f%% (%d of %d lines)\n", pct, hit, found
+            }
+          ' coverage/lcov.info >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload coverage
+        if: ${{ !cancelled() && hashFiles('coverage/lcov.info') != '' }}
+        uses: actions/upload-artifact@v5
+        with:
+          name: coverage-lcov-${{ github.sha }}
+          path: coverage/lcov.info
+          retention-days: 30

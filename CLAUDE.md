@@ -1,0 +1,151 @@
+# CLAUDE.md
+
+Guidance for Claude Code (claude.ai/code) when working in this repository.
+
+## Project
+
+`tube_downloader` — a Flutter app for **macOS, Windows, Android and iOS** that downloads online videos (a single video, a whole playlist, or a batch of links) to local storage, with a download queue (progress / pause / resume / retry) and a local library of finished files. English + Arabic (RTL). Bundle / application ID `com.tubedownloader.app` (dev flavour `com.tubedownloader.app.dev`).
+
+There is **no backend**. The app talks to YouTube through `youtube_explode_dart` (metadata, stream manifests, playlists), downloads streams itself, and merges / converts them with FFmpeg. Distribution is sideload only (Apple guideline 5.2.3 and Google Play policy reject YouTube downloaders).
+
+- Implementation plan and decisions: `/Users/mostafasaad/.claude/plans/glimmering-humming-moonbeam.md` (owner-approved 2026-10-04).
+- UI source of truth: the Google Stitch export in `../Tube_Downloader_design/` (screens + `DESIGN.md`), reconciled as described in [Design reconciliation](#design-reconciliation).
+- Engine findings: [docs/spike/phase0.md](docs/spike/phase0.md).
+
+## Project skills
+
+Skills in [.claude/skills/](.claude/skills/) load themselves when their topic comes up. A skill's `description:` is its only trigger — when one fails to fire, sharpen the description rather than repeating the rule here.
+
+| Skill | Covers |
+|---|---|
+| `codebase-conventions` | Search the whole of `lib/` by role before building anything; Clean Architecture layer rules; house naming; assets; strings via `context.l10n` |
+| `state-safety` | `if (isClosed) return;` after every await; cancel subscriptions in `close()`; freezed states; sequence-asserted tests |
+| `performance` | Widget classes over `_buildX()`; lazy lists with stable keys; throttled progress rebuilds; `cacheWidth` on every thumbnail |
+| `rtl-a11y` | Directional layout, icon mirroring, bidi-isolated numbers, 2.0 text scale, 48dp targets, semantics |
+| `adaptive-layout` | `WindowClass` (compact / medium / expanded), `AdaptiveShell`, master/detail, grids, desktop window rules |
+| `download-errors` | `FailureMapper` → `Result.failure(AppFailure)` → failure state → `showFailureSnackBar/Dialog`; the exception → `FailureType` table |
+| `review-gate` | Read-only pre-commit gate: `bash .claude/skills/review-gate/scripts/check.sh` |
+| `flutter-flavors` | dev/prod flavours on iOS + Android (+ desktop notes) |
+| `flutter-splash-launch` | Native splash → Dart launch screen handoff (+ desktop notes) |
+
+## Common commands
+
+Two flavoured entry points — **there is no `lib/main.dart`**; never run without `-t`.
+
+```bash
+flutter pub get
+flutter gen-l10n                                            # after editing lib/l10n/*.arb
+dart run build_runner build --delete-conflicting-outputs   # freezed, json_serializable, drift
+
+# Run (iOS / Android / macOS have flavours; Windows has only -t)
+flutter run --flavor development -t lib/main_dev.dart
+flutter run --flavor production  -t lib/main_prod.dart
+flutter run -d windows -t lib/main_dev.dart
+
+flutter analyze --fatal-infos
+flutter test --exclude-tags golden,network      # what CI runs
+flutter test --tags network                     # real-YouTube smoke tests, local only
+bash .claude/skills/review-gate/scripts/check.sh --tests
+```
+
+Generated files (`*.g.dart`, `*.freezed.dart`, `lib/l10n/app_localizations*.dart`) are **not committed**; CI regenerates them. Run both generators after cloning.
+
+**Android builds on the owner's network (2026-10-04):** long downloads from Google hosts stall (no bytes, connection kept open), and `download.flutter.io` answers with a mismatched TLS certificate. Flutter's Gradle plugin fetches engine jars from `storage.googleapis.com`, and the multi-ABI debug jars (`armeabi_v7a_debug`, `x86_64_debug`) never finished downloading, which hangs `flutter build apk --debug` in dependency resolution with ~0 % CPU. Until they are cached, build debug APKs for one ABI: `flutter build apk --flavor development -t lib/main_dev.dart --debug --target-platform android-arm64`. (`flutter run` has no `--target-platform` flag — it already builds only for the connected device's ABI, arm64 on the emulator and modern phones.) All three **release** engine jars are cached, so `flutter build apk --flavor production -t lib/main_prod.dart --split-per-abi` is unaffected; profile jars are not cached yet. Diagnose a hung Gradle with `jstack <GradleDaemon pid>` (look for `ParallelResolveArtifactSet` / `SocketInputStream`) and `lsof -a -p <pid> -i TCP`.
+
+## Architecture
+
+### Entry-point pipeline (`lib/core/app_bootstrap.dart`) — order is load-bearing
+
+0. `installLoggingPolicy(config)` — first, before anything can log. Mutes the global `debugPrint` unless `AppConfig.verboseLogging`, and returns the real console, which the two error handlers use. Stream URLs are tied to the user's IP address: never log them in production.
+1. `runZonedGuarded` + `FlutterError.onError`.
+2. *(Phase 1)* `setupGetIt(config)` → open the drift database → read settings (theme mode, locale) → `runApp`.
+3. *(Phase 2)* `RecoveryService.run()` → `DownloadQueueService.start()` — recovery must finish before the queue pumps.
+
+### Layers (Clean Architecture + Track View conventions)
+
+Per feature: `data/` → `domain/` → `logic/` → `presentation/`.
+
+- `domain/` — pure Dart: freezed entities, repo **contracts**, use cases (only where they do something). No Flutter, `dart:io`, drift or plugin imports (review-gate blocks it).
+- `data/` — implementations (`XRepoImpl implements XRepo`), drift DAOs, the YouTube resolver, transports, FFmpeg, platform channels.
+- `logic/` — Cubits (never full Blocs) with freezed sealed-union states; depend on contracts/use cases injected through the constructor.
+- `presentation/` — screens and widgets; no business logic.
+
+The **download core** is shared by four features and lives in `lib/core/download_core/` (`domain/` + `data/`): entities, `TaskStateMachine`, `DownloadQueueService`, `RecoveryService`, resolver/transport/muxer contracts and their implementations, repos, file naming. Features never build a second resolver, queue or progress pipeline.
+
+```
+UI (BlocBuilder/BlocSelector) → Cubit → contracts / use cases → *_impl (drift, youtube_explode, HttpClient, FFmpeg)
+                                   ↘ DownloadQueueService (lazy singleton: commands in, drift watch + live progress out)
+```
+
+### State, DI, routing
+
+- **State:** `flutter_bloc` Cubits only; states are `freezed` sealed unions. `getIt<SomeCubit>()` from `BlocProvider.create`, never constructed inline. One `BlocProvider` at the smallest subtree that needs it; justify any `MultiBlocProvider`.
+- **DI:** `get_it`. `setupGetIt()` is the ordered start-up block plus one `register<Feature>Dependencies(getIt)` call per file in `lib/core/di/modules/`. Repos and services `registerLazySingleton`; cubits `registerFactory`; `AppearanceCubit` is an app-root singleton. A DI-graph test fails on duplicate or missing registrations.
+- **Routing:** `go_router`, `StatefulShellRoute.indexedStack` with four branches (New · Downloads · Library · Settings) rendered by `AdaptiveShell`; task details is a pushed route on compact windows and a side pane on expanded ones.
+- **Persistence:** drift for everything durable — tasks, legs, events, groups, library, settings (single row, incl. theme mode and locale). Live progress is **not** written per tick; it streams from `DownloadQueueService.live`.
+
+### Engine notes (read [docs/spike/phase0.md](docs/spike/phase0.md) before touching the engine)
+
+- `youtube_explode_dart` 3.1.0's default clients get HTTP 403 on adaptive audio. The app defines a `visionOs` `YoutubeApiClient` itself; the client list is injected `EngineConfig`, never hard-coded at a call site.
+- Streams are throttled per connection (~0.5 MB/s): the transport downloads each leg as parallel ranged chunks.
+- Persist a `FormatSelector` (kind, max height, codec/audio preference, container), **never** itags or URLs — URLs expire and are bound to the IP; each leg is resolved just in time.
+- Age-restricted and live videos are explicitly unsupported (`FailureType.ageRestricted` / `liveNotSupported`).
+- FFmpeg: `ffmpeg_kit_flutter_new_audio` (LGPL; includes lame for MP3). Merges use `-c copy`.
+
+## Engineering rules (all new code and any refactor)
+
+> **Act like a senior mobile engineer.** Every decision — architecture, naming, state, layout, error handling — is deliberate, defensible, consistent with the codebase, and explained when non-obvious.
+
+### 1. Architecture & paradigms
+- **SOLID**, especially Single Responsibility and Dependency Inversion: cubits depend on contracts, never on drift, `HttpClient`, `YoutubeExplode` or a plugin.
+- **Patterns:** Factory for construction (engine/transport selection), **Strategy** for variable behaviour (`MediaResolver`, `MediaTransport`, `MediaMuxer` implementations chosen per platform by config) instead of `if (Platform.isX)` ladders in business code.
+- **Clean code:** self-documenting names; one method = one responsibility; extract UI into named private widget **classes** (never `Widget _buildX()`).
+- **DRY:** search the whole of `lib/` by role before writing a card, chip, dialog, field, empty state or helper (`codebase-conventions` skill). Shared UI in `lib/core/widgets/`, helpers in `lib/core/helpers/`.
+
+### 2. State management
+- Cubits only; no `setState` for business state; no business logic in widgets.
+- Immutable freezed states; UI reacts only via `BlocBuilder` / `BlocConsumer` / `BlocSelector` / `BlocListener`.
+- **Guard every `emit` after an `await` with `if (isClosed) return;`, and cancel every subscription in `close()`** (`state-safety` skill).
+
+### 3. UI / UX & responsiveness
+- **Sizing from `MediaQuery.sizeOf` / `LayoutBuilder` only** — `flutter_screenutil` is banned. No raw pixel magic numbers in feature code; use `Dimens` and the spacing helpers.
+- **Layout structure branches on `windowClassOf(context)`** (width-based); phone-vs-tablet component density on `isLargeScreen(context)` (`adaptive-layout` skill). Verify every screen from the minimum desktop window (1024×680) to full screen, on phone and tablet.
+- **RTL:** never a `TextDirection` literal (except the shared `LtrText` for URLs/paths) or physical padding/alignment (`rtl-a11y` skill).
+- **Colours** come from `ColorsManager` (brand/status) and `context.colors` (theme tokens, dark + light). No `Color(0x…)` / `Colors.*` outside `colors_manager.dart`.
+- **Spacing** via `verticalSpace` / `horizontalSpace`; **text** via `Styles.font<size><Weight>` + `.copyWith(color: …)`; weights via `FontWeightHelper`. No bare `TextStyle(` / `FontWeight.w600` in feature code.
+- **Numbers shown to the user** (sizes, speeds, %, durations, dates) go through `lib/core/helpers/formatters.dart`, which also bidi-isolates them.
+- **Animations** via `flutter_animate`; no `lottie` / `rive`.
+- **Strings** via `context.l10n.<key>`; every key in both `app_en.arb` and `app_ar.arb`.
+
+### 4. CI/CD & DevOps
+- Every PR passes [quality.yml](.github/workflows/quality.yml): code generation, whole-repo format check, `flutter analyze --fatal-infos`, the review gate, `flutter test --exclude-tags golden,network`.
+- **Flutter is pinned to 3.47.5.** An SDK upgrade is one deliberate commit that bumps the pin, fixes new diagnostics and re-records goldens on macOS.
+- No secrets or environment-specific values in code. Signing material never enters git (review-gate blocks key files).
+
+### 5. Working style
+- Explain the "why" for non-trivial code in a one-line comment.
+- No black boxes: readability over clever one-liners.
+- Refactor within the bounds of the requested change; flag larger refactors as follow-ups.
+- Tests are expected **green**; run `flutter test` before and after a change and treat any new failure as yours.
+
+## Library conventions (don't introduce alternatives without approval)
+
+| Concern | Choice |
+|---|---|
+| State | `flutter_bloc` (Cubit) + `freezed` states |
+| DI / routing | `get_it` / `go_router` |
+| Models | `json_serializable` for JSON (engine config, `format_json`); `freezed` for entities and states — never `equatable` |
+| Results | freezed `Result<T>` + `AppFailure` (`lib/core/error/`) — never `dartz` |
+| Persistence | `drift` + `drift_flutter` (no `shared_preferences`, `hive`, `isar`) |
+| Engine | `youtube_explode_dart`, own `dart:io` `HttpClient` transport (no `dio`), `ffmpeg_kit_flutter_new_audio` |
+| Platform | `path_provider`, `file_picker`, `permission_handler`, `share_plus`, `url_launcher` (desktop open), `open_filex` (mobile open), `window_manager`, `desktop_drop`, `receive_sharing_intent`, `flutter_local_notifications`, `connectivity_plus` |
+| UI | `flutter_animate`, `flutter_svg`, bundled **Almarai** (Light 300 / Regular 400 / Bold 700 / ExtraBold 800) |
+| Tests | `flutter_test`, `bloc_test`, `mocktail`, `fake_async` + `clock`, drift `NativeDatabase.memory()` |
+
+The review gate's banned list (`banned_reason` in `check.sh`) is the enforced version of this table.
+
+## Design reconciliation
+
+The Stitch mocks invent telemetry the engine cannot provide. **Do not build:** engine/parser/"parallel slots" status badges, the profile avatar and ⚡ button, "estimated download time", "Turbo", threads/chunks counters, socket latency, CDN names, "Save Queue Preset", the Library "Favorites" chip, "Lossless Stream Ready", the storage System/Other split. **Replace:** playlist pagination → a lazy list; "Stream Inspector" log → the real task event timeline; storage card → free/total of the save volume; "Queue & Pipeline" → the route title. Desktop Library/Settings, empty/error/permission states, light theme and RTL were not delivered by Stitch — derive them from the delivered components and verify by running the app.
+
+Tokens: use the brief's named tokens (dark `#0B0D14` / `#141824` / `#1C2130` / `#262C3D`, light `#F6F7FB` / `#FFFFFF` / `#F0F2F8` / `#E3E6EF`, primary `#6C5CE7`, accent `#00C2FF`, success `#22C55E`, warning `#F5A524`, error `#EF4444`, paused `#94A3B8`). Ignore the auto-generated Material 3 tonal set in the Stitch `DESIGN.md` front-matter.

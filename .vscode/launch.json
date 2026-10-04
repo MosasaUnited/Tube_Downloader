@@ -1,0 +1,12 @@
+{
+  // Every configuration passes BOTH --flavor and the matching -t entry file
+  // (flutter-flavors skill). Windows has no --flavor: the entry file alone decides.
+  "version": "0.2.0",
+  "configurations": [
+    { "name": "Development", "request": "launch", "type": "dart", "program": "lib/main_dev.dart", "args": ["--flavor", "development"] },
+    { "name": "Production", "request": "launch", "type": "dart", "program": "lib/main_prod.dart", "args": ["--flavor", "production"] },
+    { "name": "Development (profile)", "request": "launch", "type": "dart", "flutterMode": "profile", "program": "lib/main_dev.dart", "args": ["--flavor", "development"] },
+    { "name": "Windows — Development", "request": "launch", "type": "dart", "program": "lib/main_dev.dart", "deviceId": "windows" },
+    { "name": "Windows — Production", "request": "launch", "type": "dart", "program": "lib/main_prod.dart", "deviceId": "windows" }
+  ]
+}
