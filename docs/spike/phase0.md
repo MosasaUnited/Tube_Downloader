@@ -128,3 +128,6 @@ During the first full-download run, all 4 chunk workers stopped receiving bytes 
 | 2026-10-04 | 20 s stall timeout per chunk request + chunk retry (5 attempts, backoff); 15 s connect timeout | 17-minute silent stall on macOS; `HttpClient` has no read timeout. |
 | 2026-10-04 | `TransientFailureException` and network errors in the resolver are retried with backoff | Android emulator failed once on `WatchPage`, succeeded on retry. |
 | 2026-10-04 | Show YouTube's quality label, not the probed pixel height | Letterboxed films report 800p / 818p for a "1080p" stream. |
+| 2026-10-04 | Implemented: `ChunkedHttpTransport` (8 × 4 MB, in-order append, 20 s stall timeout); contract tests against a local server that stalls, 403s and slows | Phase 2. End-to-end through the app pipeline: 11.3 MB M4A in 37 s, peak 1.78 MB/s. |
+| 2026-10-04 | Stream height = the quality label's number, not pixels | Tears of Steel's "1080p" is 800 px tall; a portrait Short's "1080p" is 1920 px. |
+

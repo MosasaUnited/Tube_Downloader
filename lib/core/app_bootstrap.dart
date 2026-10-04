@@ -5,6 +5,8 @@ import 'package:flutter/widgets.dart';
 import 'package:tube_downloader/core/configs/app_config.dart';
 import 'package:tube_downloader/core/di/dependency_injection.dart';
 import 'package:tube_downloader/core/download_core/domain/repos/settings_repo.dart';
+import 'package:tube_downloader/core/download_core/domain/services/download_queue_service.dart';
+import 'package:tube_downloader/core/download_core/domain/services/recovery_service.dart';
 import 'package:tube_downloader/core/platform/window_service.dart';
 import 'package:tube_downloader/tube_downloader_app.dart';
 
@@ -42,8 +44,10 @@ DebugPrintCallback installLoggingPolicy(AppConfig config) {
 ///
 /// **The order is load-bearing** (CLAUDE.md » Entry-point pipeline):
 /// logging policy → window → DI (opens the database) → settings load (so the
-/// first frame has the saved theme and language) → `runApp`. Phase 2 adds
-/// download recovery and the queue start before `runApp`.
+/// first frame has the saved theme and language) → download recovery (rebuild
+/// interrupted tasks from the bytes on disk) → queue start → `runApp`.
+/// Recovery MUST finish before the queue pumps, or a half-recovered task could
+/// be started twice.
 ///
 /// Runs inside [runZonedGuarded] so an error during initialization is reported
 /// instead of silently stranding the app before its first frame.
@@ -68,6 +72,8 @@ Future<void> bootstrapAndRun(AppConfig config) async {
       await WindowService.configure(config);
       await setupGetIt(config);
       await getIt<SettingsRepo>().load();
+      await getIt<RecoveryService>().run();
+      await getIt<DownloadQueueService>().start();
 
       runApp(TubeDownloaderApp(config: config));
     },

@@ -32,6 +32,8 @@ final class FfmpegException implements Exception {
   /// The last lines of the FFmpeg log — for `AppFailure.debug` only.
   final String? logTail;
 
+  // The log tail rides along into AppFailure.debug (logs only, never shown).
   @override
-  String toString() => 'FfmpegException(rc: $returnCode)';
+  String toString() =>
+      'FfmpegException(rc: $returnCode)${logTail == null ? '' : '\n$logTail'}';
 }

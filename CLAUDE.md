@@ -91,6 +91,11 @@ UI (BlocBuilder/BlocSelector) → Cubit → contracts / use cases → *_impl (dr
 - Persist a `FormatSelector` (kind, max height, codec/audio preference, container), **never** itags or URLs — URLs expire and are bound to the IP; each leg is resolved just in time.
 - Age-restricted and live videos are explicitly unsupported (`FailureType.ageRestricted` / `liveNotSupported`).
 - FFmpeg: `ffmpeg_kit_flutter_new_audio` (LGPL; includes lame for MP3). Merges use `-c copy`.
+- **Transport** (`ChunkedHttpTransport`): 8 workers × 4 MB ranged chunks per leg, 20 s stall timeout per chunk with retries, chunks appended IN ORDER so the file is always a contiguous prefix — **resume = file length**. 403/410 fail at once as `streamExpired` (the job re-resolves the leg once); 429 fails as `rateLimited` (the queue sets the global cooldown on the `ResolveGate`). One `RandomAccessFile` must never have two pending writes: a single flusher writes.
+- **Quality = YouTube's label class**, not pixel height: "1080p60" → 1080, also for a letterboxed 1920×800 film and a portrait 1080×1920 Short (`StreamCandidate.height`).
+- **Job / queue / recovery** (`lib/core/download_core/domain/services/`): `DownloadJob` runs one task end to end; `DownloadQueueService` (lazy singleton) owns slots, backoff, rate-limit strikes, the offline and Wi-Fi-only gates, live progress and outcomes; `RecoveryService` runs in bootstrap before `queue.start()`. On resume a leg continues only if the freshly resolved stream has the same itag and size; otherwise its partial file is discarded.
+- Real-YouTube checks are tagged `network`: `flutter test --tags network` (resolver smoke test + an end-to-end M4A download through the real pipeline — 11.3 MB in 37 s on 2026-10-04).
+- **iOS/macOS integration tests:** `FLUTTER_TARGET` is pinned at target level on every configuration (flutter-flavors), so `flutter test integration_test -d macos|ios` builds the app entry point, not the test file. Device-level checks run the app itself until Debug configurations are unpinned (an owner decision — the archive guard only needs Release pinned).
 
 ## Engineering rules (all new code and any refactor)
 

@@ -5,7 +5,15 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:tube_downloader/core/configs/app_config.dart';
 import 'package:tube_downloader/core/database/app_database.dart';
 import 'package:tube_downloader/core/di/dependency_injection.dart';
+import 'package:tube_downloader/core/download_core/domain/repos/download_repo.dart';
+import 'package:tube_downloader/core/download_core/domain/repos/file_system_gateway.dart';
+import 'package:tube_downloader/core/download_core/domain/repos/library_repo.dart';
+import 'package:tube_downloader/core/download_core/domain/repos/media_muxer.dart';
+import 'package:tube_downloader/core/download_core/domain/repos/media_resolver.dart';
+import 'package:tube_downloader/core/download_core/domain/repos/media_transport.dart';
 import 'package:tube_downloader/core/download_core/domain/repos/settings_repo.dart';
+import 'package:tube_downloader/core/download_core/domain/services/download_queue_service.dart';
+import 'package:tube_downloader/core/download_core/domain/services/recovery_service.dart';
 import 'package:tube_downloader/features/settings/logic/appearance_cubit/appearance_cubit.dart';
 
 void main() {
@@ -19,6 +27,16 @@ void main() {
     await getIt<SettingsRepo>().load();
 
     expect(getIt<AppConfig>().flavor, AppFlavor.development);
+    // The whole download core resolves (lazy singletons — nothing touches a
+    // platform channel until used).
+    expect(getIt<DownloadQueueService>(), same(getIt<DownloadQueueService>()));
+    expect(getIt<RecoveryService>(), isNotNull);
+    expect(getIt<MediaResolver>(), isNotNull);
+    expect(getIt<MediaTransport>(), isNotNull);
+    expect(getIt<MediaMuxer>(), isNotNull);
+    expect(getIt<DownloadRepo>(), isNotNull);
+    expect(getIt<LibraryRepo>(), isNotNull);
+    expect(getIt<FileSystemGateway>(), isNotNull);
     expect(getIt<SettingsRepo>(), isNotNull);
     expect(
       getIt<AppearanceCubit>(),
