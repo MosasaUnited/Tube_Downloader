@@ -1,0 +1,12 @@
+targets:
+  $default:
+    builders:
+      drift_dev:
+        options:
+          # `dart run drift_dev make-migrations` reads these: it exports each
+          # schema version and generates the SchemaVerifier migration tests.
+          databases:
+            app_database: lib/core/database/app_database.dart
+          schema_dir: drift_schemas/
+          test_dir: test/drift/
+          store_date_time_values_as_text: false

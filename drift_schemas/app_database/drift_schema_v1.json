@@ -1,0 +1,1240 @@
+{
+  "_meta": {
+    "description": "This file contains a serialized version of schema entities for drift.",
+    "version": "1.3.0"
+  },
+  "options": {
+    "store_date_time_values_as_text": false
+  },
+  "entities": [
+    {
+      "id": 0,
+      "references": [],
+      "type": "table",
+      "data": {
+        "name": "download_groups",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "id",
+            "getter_name": "id",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "playlist_id",
+            "getter_name": "playlistId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "title",
+            "getter_name": "title",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "channel",
+            "getter_name": "channel",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "sub_dir",
+            "getter_name": "subDir",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "total",
+            "getter_name": "total",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "created_at",
+            "getter_name": "createdAt",
+            "moor_type": "dateTime",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [],
+        "explicit_pk": [
+          "id"
+        ]
+      }
+    },
+    {
+      "id": 1,
+      "references": [
+        0
+      ],
+      "type": "table",
+      "data": {
+        "name": "download_tasks",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "id",
+            "getter_name": "id",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "group_id",
+            "getter_name": "groupId",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES download_groups (id) ON DELETE CASCADE",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES download_groups (id) ON DELETE CASCADE"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "download_groups",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": "cascade"
+                }
+              }
+            ]
+          },
+          {
+            "name": "position",
+            "getter_name": "position",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "playlist_index",
+            "getter_name": "playlistIndex",
+            "moor_type": "int",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "source_url",
+            "getter_name": "sourceUrl",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "video_id",
+            "getter_name": "videoId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "title",
+            "getter_name": "title",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "channel",
+            "getter_name": "channel",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "duration_ms",
+            "getter_name": "durationMs",
+            "moor_type": "int",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "thumb_url",
+            "getter_name": "thumbUrl",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "format_json",
+            "getter_name": "formatJson",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "format_key",
+            "getter_name": "formatKey",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "status",
+            "getter_name": "status",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [],
+            "type_converter": {
+              "dart_expr": "const EnumNameConverter<TaskStatus>(TaskStatus.values)",
+              "dart_type_name": "TaskStatus"
+            }
+          },
+          {
+            "name": "pause_reason",
+            "getter_name": "pauseReason",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [],
+            "type_converter": {
+              "dart_expr": "const EnumNameConverter<PauseReason>(PauseReason.values)",
+              "dart_type_name": "PauseReason"
+            }
+          },
+          {
+            "name": "failure_type",
+            "getter_name": "failureType",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [],
+            "type_converter": {
+              "dart_expr": "const EnumNameConverter<FailureType>(FailureType.values)",
+              "dart_type_name": "FailureType"
+            }
+          },
+          {
+            "name": "failure_debug",
+            "getter_name": "failureDebug",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "attempt",
+            "getter_name": "attempt",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('0')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "not_before",
+            "getter_name": "notBefore",
+            "moor_type": "dateTime",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "output_path",
+            "getter_name": "outputPath",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "transport",
+            "getter_name": "transport",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "created_at",
+            "getter_name": "createdAt",
+            "moor_type": "dateTime",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "updated_at",
+            "getter_name": "updatedAt",
+            "moor_type": "dateTime",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "completed_at",
+            "getter_name": "completedAt",
+            "moor_type": "dateTime",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [],
+        "explicit_pk": [
+          "id"
+        ]
+      }
+    },
+    {
+      "id": 2,
+      "references": [
+        1
+      ],
+      "type": "table",
+      "data": {
+        "name": "task_legs",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "task_id",
+            "getter_name": "taskId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES download_tasks (id) ON DELETE CASCADE",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES download_tasks (id) ON DELETE CASCADE"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "download_tasks",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": "cascade"
+                }
+              }
+            ]
+          },
+          {
+            "name": "kind",
+            "getter_name": "kind",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [],
+            "type_converter": {
+              "dart_expr": "const EnumNameConverter<LegKind>(LegKind.values)",
+              "dart_type_name": "LegKind"
+            }
+          },
+          {
+            "name": "itag",
+            "getter_name": "itag",
+            "moor_type": "int",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "ext",
+            "getter_name": "ext",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "url",
+            "getter_name": "url",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "url_expires_at",
+            "getter_name": "urlExpiresAt",
+            "moor_type": "dateTime",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "total_bytes",
+            "getter_name": "totalBytes",
+            "moor_type": "int",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "done_bytes",
+            "getter_name": "doneBytes",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('0')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "tmp_path",
+            "getter_name": "tmpPath",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "transport_ref",
+            "getter_name": "transportRef",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "completed",
+            "getter_name": "completed",
+            "moor_type": "bool",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "CHECK (\"completed\" IN (0, 1))",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "CHECK (\"completed\" IN (0, 1))"
+            },
+            "default_dart": "const CustomExpression('0')",
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [],
+        "explicit_pk": [
+          "task_id",
+          "kind"
+        ]
+      }
+    },
+    {
+      "id": 3,
+      "references": [
+        1
+      ],
+      "type": "table",
+      "data": {
+        "name": "task_events",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "id",
+            "getter_name": "id",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "PRIMARY KEY AUTOINCREMENT",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "PRIMARY KEY AUTOINCREMENT"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              "auto-increment"
+            ]
+          },
+          {
+            "name": "task_id",
+            "getter_name": "taskId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES download_tasks (id) ON DELETE CASCADE",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES download_tasks (id) ON DELETE CASCADE"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "download_tasks",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": "cascade"
+                }
+              }
+            ]
+          },
+          {
+            "name": "type",
+            "getter_name": "type",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [],
+            "type_converter": {
+              "dart_expr": "const EnumNameConverter<EventType>(EventType.values)",
+              "dart_type_name": "EventType"
+            }
+          },
+          {
+            "name": "at",
+            "getter_name": "at",
+            "moor_type": "dateTime",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "args_json",
+            "getter_name": "argsJson",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": []
+      }
+    },
+    {
+      "id": 4,
+      "references": [],
+      "type": "table",
+      "data": {
+        "name": "library_items",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "id",
+            "getter_name": "id",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "task_id",
+            "getter_name": "taskId",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "defaultConstraints": "UNIQUE",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "UNIQUE"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              "unique"
+            ]
+          },
+          {
+            "name": "video_id",
+            "getter_name": "videoId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "source_url",
+            "getter_name": "sourceUrl",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "title",
+            "getter_name": "title",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "channel",
+            "getter_name": "channel",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "search_norm",
+            "getter_name": "searchNorm",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "kind",
+            "getter_name": "kind",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [],
+            "type_converter": {
+              "dart_expr": "const EnumNameConverter<MediaKind>(MediaKind.values)",
+              "dart_type_name": "MediaKind"
+            }
+          },
+          {
+            "name": "container",
+            "getter_name": "container",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [],
+            "type_converter": {
+              "dart_expr": "const EnumNameConverter<OutContainer>(OutContainer.values)",
+              "dart_type_name": "OutContainer"
+            }
+          },
+          {
+            "name": "height",
+            "getter_name": "height",
+            "moor_type": "int",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "duration_ms",
+            "getter_name": "durationMs",
+            "moor_type": "int",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "path",
+            "getter_name": "path",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "UNIQUE",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "UNIQUE"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              "unique"
+            ]
+          },
+          {
+            "name": "bytes",
+            "getter_name": "bytes",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "thumb_path",
+            "getter_name": "thumbPath",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "completed_at",
+            "getter_name": "completedAt",
+            "moor_type": "dateTime",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "missing",
+            "getter_name": "missing",
+            "moor_type": "bool",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "CHECK (\"missing\" IN (0, 1))",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "CHECK (\"missing\" IN (0, 1))"
+            },
+            "default_dart": "const CustomExpression('0')",
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [],
+        "explicit_pk": [
+          "id"
+        ]
+      }
+    },
+    {
+      "id": 5,
+      "references": [],
+      "type": "table",
+      "data": {
+        "name": "app_settings",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "id",
+            "getter_name": "id",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "save_directory",
+            "getter_name": "saveDirectory",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "default_kind",
+            "getter_name": "defaultKind",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [],
+            "type_converter": {
+              "dart_expr": "const EnumNameConverter<MediaKind>(MediaKind.values)",
+              "dart_type_name": "MediaKind"
+            }
+          },
+          {
+            "name": "default_max_height",
+            "getter_name": "defaultMaxHeight",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "audio_kbps",
+            "getter_name": "audioKbps",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "max_concurrent",
+            "getter_name": "maxConcurrent",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "name_template",
+            "getter_name": "nameTemplate",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "playlist_subfolders",
+            "getter_name": "playlistSubfolders",
+            "moor_type": "bool",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "CHECK (\"playlist_subfolders\" IN (0, 1))",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "CHECK (\"playlist_subfolders\" IN (0, 1))"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "wifi_only",
+            "getter_name": "wifiOnly",
+            "moor_type": "bool",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "CHECK (\"wifi_only\" IN (0, 1))",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "CHECK (\"wifi_only\" IN (0, 1))"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "clipboard_watch",
+            "getter_name": "clipboardWatch",
+            "moor_type": "bool",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "CHECK (\"clipboard_watch\" IN (0, 1))",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "CHECK (\"clipboard_watch\" IN (0, 1))"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "notifications",
+            "getter_name": "notifications",
+            "moor_type": "bool",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "CHECK (\"notifications\" IN (0, 1))",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "CHECK (\"notifications\" IN (0, 1))"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "theme",
+            "getter_name": "theme",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [],
+            "type_converter": {
+              "dart_expr": "const EnumNameConverter<ThemePreference>(ThemePreference.values)",
+              "dart_type_name": "ThemePreference"
+            }
+          },
+          {
+            "name": "language_code",
+            "getter_name": "languageCode",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [
+          "CHECK (id = 1)",
+          "CHECK (max_concurrent BETWEEN 1 AND 5)"
+        ],
+        "explicit_pk": [
+          "id"
+        ]
+      }
+    },
+    {
+      "id": 6,
+      "references": [
+        1
+      ],
+      "type": "index",
+      "data": {
+        "on": 1,
+        "name": "tasks_runnable",
+        "sql": null,
+        "unique": false,
+        "columns": [
+          {
+            "column": "status",
+            "order_by": null
+          },
+          {
+            "column": "not_before",
+            "order_by": null
+          },
+          {
+            "column": "position",
+            "order_by": null
+          }
+        ]
+      }
+    },
+    {
+      "id": 7,
+      "references": [
+        1
+      ],
+      "type": "index",
+      "data": {
+        "on": 1,
+        "name": "tasks_group",
+        "sql": null,
+        "unique": false,
+        "columns": [
+          {
+            "column": "group_id",
+            "order_by": null
+          }
+        ]
+      }
+    },
+    {
+      "id": 8,
+      "references": [
+        1
+      ],
+      "type": "index",
+      "data": {
+        "on": 1,
+        "name": "tasks_dedupe",
+        "sql": null,
+        "unique": false,
+        "columns": [
+          {
+            "column": "video_id",
+            "order_by": null
+          },
+          {
+            "column": "format_key",
+            "order_by": null
+          }
+        ]
+      }
+    },
+    {
+      "id": 9,
+      "references": [
+        3
+      ],
+      "type": "index",
+      "data": {
+        "on": 3,
+        "name": "events_task_time",
+        "sql": null,
+        "unique": false,
+        "columns": [
+          {
+            "column": "task_id",
+            "order_by": null
+          },
+          {
+            "column": "at",
+            "order_by": null
+          }
+        ]
+      }
+    },
+    {
+      "id": 10,
+      "references": [
+        4
+      ],
+      "type": "index",
+      "data": {
+        "on": 4,
+        "name": "library_kind_time",
+        "sql": null,
+        "unique": false,
+        "columns": [
+          {
+            "column": "kind",
+            "order_by": null
+          },
+          {
+            "column": "completed_at",
+            "order_by": null
+          }
+        ]
+      }
+    },
+    {
+      "id": 11,
+      "references": [
+        4
+      ],
+      "type": "index",
+      "data": {
+        "on": 4,
+        "name": "library_search",
+        "sql": null,
+        "unique": false,
+        "columns": [
+          {
+            "column": "search_norm",
+            "order_by": null
+          }
+        ]
+      }
+    }
+  ],
+  "fixed_sql": [
+    {
+      "name": "download_groups",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"download_groups\" (\"id\" TEXT NOT NULL, \"playlist_id\" TEXT NOT NULL, \"title\" TEXT NOT NULL, \"channel\" TEXT NULL, \"sub_dir\" TEXT NULL, \"total\" INTEGER NOT NULL, \"created_at\" INTEGER NOT NULL, PRIMARY KEY (\"id\"));"
+        }
+      ]
+    },
+    {
+      "name": "download_tasks",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"download_tasks\" (\"id\" TEXT NOT NULL, \"group_id\" TEXT NULL REFERENCES download_groups (id) ON DELETE CASCADE, \"position\" INTEGER NOT NULL, \"playlist_index\" INTEGER NULL, \"source_url\" TEXT NOT NULL, \"video_id\" TEXT NOT NULL, \"title\" TEXT NOT NULL, \"channel\" TEXT NOT NULL, \"duration_ms\" INTEGER NULL, \"thumb_url\" TEXT NULL, \"format_json\" TEXT NOT NULL, \"format_key\" TEXT NOT NULL, \"status\" TEXT NOT NULL, \"pause_reason\" TEXT NULL, \"failure_type\" TEXT NULL, \"failure_debug\" TEXT NULL, \"attempt\" INTEGER NOT NULL DEFAULT 0, \"not_before\" INTEGER NULL, \"output_path\" TEXT NULL, \"transport\" TEXT NULL, \"created_at\" INTEGER NOT NULL, \"updated_at\" INTEGER NOT NULL, \"completed_at\" INTEGER NULL, PRIMARY KEY (\"id\"));"
+        }
+      ]
+    },
+    {
+      "name": "task_legs",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"task_legs\" (\"task_id\" TEXT NOT NULL REFERENCES download_tasks (id) ON DELETE CASCADE, \"kind\" TEXT NOT NULL, \"itag\" INTEGER NULL, \"ext\" TEXT NULL, \"url\" TEXT NULL, \"url_expires_at\" INTEGER NULL, \"total_bytes\" INTEGER NULL, \"done_bytes\" INTEGER NOT NULL DEFAULT 0, \"tmp_path\" TEXT NOT NULL, \"transport_ref\" TEXT NULL, \"completed\" INTEGER NOT NULL DEFAULT 0 CHECK (\"completed\" IN (0, 1)), PRIMARY KEY (\"task_id\", \"kind\"));"
+        }
+      ]
+    },
+    {
+      "name": "task_events",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"task_events\" (\"id\" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, \"task_id\" TEXT NOT NULL REFERENCES download_tasks (id) ON DELETE CASCADE, \"type\" TEXT NOT NULL, \"at\" INTEGER NOT NULL, \"args_json\" TEXT NULL);"
+        }
+      ]
+    },
+    {
+      "name": "library_items",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"library_items\" (\"id\" TEXT NOT NULL, \"task_id\" TEXT NULL UNIQUE, \"video_id\" TEXT NOT NULL, \"source_url\" TEXT NOT NULL, \"title\" TEXT NOT NULL, \"channel\" TEXT NOT NULL, \"search_norm\" TEXT NOT NULL, \"kind\" TEXT NOT NULL, \"container\" TEXT NOT NULL, \"height\" INTEGER NULL, \"duration_ms\" INTEGER NULL, \"path\" TEXT NOT NULL UNIQUE, \"bytes\" INTEGER NOT NULL, \"thumb_path\" TEXT NULL, \"completed_at\" INTEGER NOT NULL, \"missing\" INTEGER NOT NULL DEFAULT 0 CHECK (\"missing\" IN (0, 1)), PRIMARY KEY (\"id\"));"
+        }
+      ]
+    },
+    {
+      "name": "app_settings",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"app_settings\" (\"id\" INTEGER NOT NULL, \"save_directory\" TEXT NULL, \"default_kind\" TEXT NOT NULL, \"default_max_height\" INTEGER NOT NULL, \"audio_kbps\" INTEGER NOT NULL, \"max_concurrent\" INTEGER NOT NULL, \"name_template\" TEXT NOT NULL, \"playlist_subfolders\" INTEGER NOT NULL CHECK (\"playlist_subfolders\" IN (0, 1)), \"wifi_only\" INTEGER NOT NULL CHECK (\"wifi_only\" IN (0, 1)), \"clipboard_watch\" INTEGER NOT NULL CHECK (\"clipboard_watch\" IN (0, 1)), \"notifications\" INTEGER NOT NULL CHECK (\"notifications\" IN (0, 1)), \"theme\" TEXT NOT NULL, \"language_code\" TEXT NULL, PRIMARY KEY (\"id\"), CHECK (id = 1), CHECK (max_concurrent BETWEEN 1 AND 5));"
+        }
+      ]
+    },
+    {
+      "name": "tasks_runnable",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE INDEX tasks_runnable ON download_tasks (status, not_before, position)"
+        }
+      ]
+    },
+    {
+      "name": "tasks_group",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE INDEX tasks_group ON download_tasks (group_id)"
+        }
+      ]
+    },
+    {
+      "name": "tasks_dedupe",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE INDEX tasks_dedupe ON download_tasks (video_id, format_key)"
+        }
+      ]
+    },
+    {
+      "name": "events_task_time",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE INDEX events_task_time ON task_events (task_id, at)"
+        }
+      ]
+    },
+    {
+      "name": "library_kind_time",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE INDEX library_kind_time ON library_items (kind, completed_at)"
+        }
+      ]
+    },
+    {
+      "name": "library_search",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE INDEX library_search ON library_items (search_norm)"
+        }
+      ]
+    }
+  ]
+}

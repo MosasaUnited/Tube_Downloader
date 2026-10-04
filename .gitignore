@@ -70,3 +70,5 @@ spike/**/build/
 spike/**/.dart_tool/
 # Gradle writes reports here (e.g. problems-report.html); never source.
 /android/build/
+# Golden diff images written by a failing golden test; never baselines.
+test/**/failures/

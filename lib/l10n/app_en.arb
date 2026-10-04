@@ -1,0 +1,60 @@
+{
+  "@@locale": "en",
+
+  "appTitle": "Tube Downloader",
+
+  "navNew": "New",
+  "navDownloads": "Downloads",
+  "navLibrary": "Library",
+  "navSettings": "Settings",
+
+  "titleNewDownload": "New Download",
+  "titleDownloads": "Downloads",
+  "titleLibrary": "Library",
+  "titleSettings": "Settings",
+
+  "activeDownloadsBadge": "{count, plural, =0{No active downloads} =1{1 active download} other{{count} active downloads}}",
+  "@activeDownloadsBadge": {
+    "description": "Screen-reader label of the Downloads navigation badge.",
+    "placeholders": { "count": { "type": "int" } }
+  },
+
+  "newDownloadHint": "Paste a video or playlist link",
+  "emptyDownloadsTitle": "No downloads yet",
+  "emptyDownloadsBody": "Paste a link to start your first download.",
+  "emptyDownloadsAction": "Start a download",
+  "emptyLibraryTitle": "Your library is empty",
+  "emptyLibraryBody": "Finished downloads appear here.",
+
+  "settingsAppearance": "Appearance",
+  "settingsTheme": "Theme",
+  "themeSystem": "System",
+  "themeLight": "Light",
+  "themeDark": "Dark",
+  "settingsLanguage": "Language",
+  "languageEnglish": "English",
+  "languageArabic": "العربية",
+
+  "actionRetry": "Retry",
+  "actionCancel": "Cancel",
+  "actionClose": "Close",
+  "actionDelete": "Delete",
+  "actionOk": "OK",
+  "collapseSidebar": "Collapse sidebar",
+  "expandSidebar": "Expand sidebar",
+
+  "failureNoInternet": "You're offline. Check your connection and try again.",
+  "failureServerUnreachable": "The server isn't responding right now. Try again in a moment.",
+  "failureRateLimited": "Too many requests. Waiting a little before trying again.",
+  "failureUnsupportedLink": "This link isn't supported.",
+  "failureVideoUnavailable": "This video isn't available.",
+  "failurePrivateVideo": "This video is private.",
+  "failureAgeRestricted": "Age-restricted videos can't be downloaded.",
+  "failureLiveNotSupported": "Live streams can't be downloaded.",
+  "failureStreamExpired": "The download link expired. Retrying…",
+  "failureStorageFull": "There isn't enough storage space.",
+  "failurePermissionDenied": "Permission denied. Allow access to save files.",
+  "failureFfmpegFailed": "Couldn't process the downloaded file.",
+  "failureCancelled": "Cancelled.",
+  "failureUnknown": "Something went wrong. Try again."
+}

@@ -22,20 +22,22 @@ description: How a failure travels and is shown (DOWNLOAD-ERRORS) — FailureMap
 
 | Input | `FailureType` |
 |---|---|
-| `SocketException`, `HandshakeException`, `http.ClientException` — and `InternetProbe` says offline | `noInternet` |
-| same, but the probe reaches the internet | `serverUnreachable` |
-| `RequestLimitExceededException`, HTTP 429, redirect to `google.com/sorry` | `rateLimited` (+ `retryAfter` from the backoff policy) |
-| `ArgumentError` from `VideoId` / `PlaylistId` parsing, `LinkParser` unsupported host | `unsupportedLink` |
-| `VideoUnavailableException` | `videoUnavailable` |
-| `VideoUnplayableException` whose reason mentions private | `privateVideo` |
-| `VideoUnplayableException` whose reason mentions age / sign in to confirm | `ageRestricted` (explicitly unsupported — do not retry) |
-| live stream (`isLive`) | `liveNotSupported` |
-| HTTP 403 during a transfer | `streamExpired` (the queue re-resolves once per leg before it surfaces) |
-| `FileSystemException` errno 28 (POSIX ENOSPC) / Windows 112 or 39 | `storageFull` |
-| errno 13 EACCES / 1 EPERM / Windows 5, denied runtime permission | `permissionDenied` |
-| non-zero FFmpeg return code | `ffmpegFailed` |
-| our cancel token | `cancelled` |
+| `CancelledException` (ours) | `cancelled` — silent |
+| `UnsupportedLinkException` (ours, from `LinkParser`), `ArgumentError(name: 'idOrUrl')` from `VideoId` / `PlaylistId` | `unsupportedLink` (any other `ArgumentError` is `unknown`) |
+| `FfmpegException` (ours, non-zero return code) | `ffmpegFailed` |
+| `HttpStatusException` (ours): 403 / 410 | `streamExpired` — the queue re-resolves the leg once before surfacing it |
+| `HttpStatusException`: 429 · 404 · 5xx | `rateLimited` · `videoUnavailable` · `serverUnreachable` |
+| `RequestLimitExceededException`; any youtube_explode message containing "not a bot" (the sign-in bot check) | `rateLimited` |
+| `VideoRequiresPurchaseException`, `VideoUnavailableException` | `videoUnavailable` |
+| `VideoUnplayableException` — reason mentions "ongoing live stream" / "confirm your age" / "private" / other | `liveNotSupported` / `ageRestricted` (explicitly unsupported — never retried) / `privateVideo` / `videoUnavailable` |
+| `TransientFailureException` (e.g. "Failed to retrieve initial data from WatchPage" — seen once on Android, fine on retry) | `serverUnreachable` (retryable) |
+| `SocketException` / package:http `ClientException` whose text is a failed host lookup or "network is unreachable" | `noInternet` |
+| other `SocketException` / `ClientException`, `HandshakeException`, `TimeoutException` (incl. the transport's stall timeout), `HttpException` | `serverUnreachable` (retryable) |
+| `FileSystemException` errno 28 ENOSPC (POSIX) / 112 or 39 (Windows) | `storageFull` |
+| `FileSystemException` errno 13 EACCES or 1 EPERM (POSIX) / 5 (Windows) | `permissionDenied` (errno 5 on POSIX is EIO → `unknown`) |
 | anything else | `unknown` |
+
+`ClientException` is matched by type **name** so the app does not depend on `package:http` (banned — it never makes requests with it); the mapper test pins it with a stand-in class. The offline/server split is a synchronous heuristic; the queue's `NetworkMonitor` separately pauses tasks with the `offline` reason.
 
 Exception class names belong to `youtube_explode_dart` 3.x — re-check them when bumping the package; the mapper test pins each one.
 

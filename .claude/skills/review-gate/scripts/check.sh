@@ -156,10 +156,18 @@ selftest code 'EdgeInsets.fromLTRB' "$P_LTRB" \
   '+      padding: EdgeInsets.fromLTRB(1, 2, 3, 4),' \
   '-      padding: EdgeInsetsDirectional.fromSTEB(1, 2, 3, 4),'
 
-P_TEXT_DIRECTION='TextDirection\.(ltr|rtl)([^A-Za-z0-9_]|$)'
+# Flags a direction being SET (named argument, assignment, return, ternary,
+# positional argument) — never a comparison: reading the direction to DECIDE
+# (`Directionality.of(context) == TextDirection.rtl`) is what rtl-a11y asks for.
+P_TEXT_DIRECTION='(:|[^=!<>]=|\(|,|\?|return)[[:space:]]*TextDirection\.(ltr|rtl)([^A-Za-z0-9_]|$)'
 selftest code 'hard-coded TextDirection' "$P_TEXT_DIRECTION" \
   '+      textDirection: TextDirection.ltr,' \
-  '-    final direction = Directionality.of(context);'
+  '+    final direction = TextDirection.rtl;' \
+  '+    return TextDirection.rtl;' \
+  '+      isArabic ? TextDirection.rtl : TextDirection.ltr,' \
+  '-    final direction = Directionality.of(context);' \
+  '-    final rtl = Directionality.of(context) == TextDirection.rtl;' \
+  '-    if (direction != TextDirection.ltr) return;'
 
 P_SCREENUTIL='[0-9)]\.(sp|w|h|r|sw|sh)([^A-Za-z0-9_]|$)'
 selftest code 'flutter_screenutil sizing' "$P_SCREENUTIL" \

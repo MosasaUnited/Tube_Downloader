@@ -1,0 +1,56 @@
+{
+  "@@locale": "ar",
+
+  "appTitle": "Tube Downloader",
+
+  "navNew": "جديد",
+  "navDownloads": "التنزيلات",
+  "navLibrary": "المكتبة",
+  "navSettings": "الإعدادات",
+
+  "titleNewDownload": "تنزيل جديد",
+  "titleDownloads": "التنزيلات",
+  "titleLibrary": "المكتبة",
+  "titleSettings": "الإعدادات",
+
+  "activeDownloadsBadge": "{count, plural, =0{لا توجد تنزيلات نشطة} =1{تنزيل نشط واحد} =2{تنزيلان نشطان} few{{count} تنزيلات نشطة} many{{count} تنزيلًا نشطًا} other{{count} تنزيل نشط}}",
+
+  "newDownloadHint": "الصق رابط فيديو أو قائمة تشغيل",
+  "emptyDownloadsTitle": "لا توجد تنزيلات بعد",
+  "emptyDownloadsBody": "الصق رابطًا لبدء أول تنزيل.",
+  "emptyDownloadsAction": "ابدأ تنزيلًا",
+  "emptyLibraryTitle": "مكتبتك فارغة",
+  "emptyLibraryBody": "تظهر هنا التنزيلات المكتملة.",
+
+  "settingsAppearance": "المظهر",
+  "settingsTheme": "السمة",
+  "themeSystem": "النظام",
+  "themeLight": "فاتح",
+  "themeDark": "داكن",
+  "settingsLanguage": "اللغة",
+  "languageEnglish": "English",
+  "languageArabic": "العربية",
+
+  "actionRetry": "إعادة المحاولة",
+  "actionCancel": "إلغاء",
+  "actionClose": "إغلاق",
+  "actionDelete": "حذف",
+  "actionOk": "حسنًا",
+  "collapseSidebar": "طيّ الشريط الجانبي",
+  "expandSidebar": "توسيع الشريط الجانبي",
+
+  "failureNoInternet": "أنت غير متصل بالإنترنت. تحقّق من الاتصال ثم حاول مرة أخرى.",
+  "failureServerUnreachable": "الخادم لا يستجيب حاليًا. حاول مرة أخرى بعد قليل.",
+  "failureRateLimited": "طلبات كثيرة جدًا. سننتظر قليلًا قبل المحاولة مجددًا.",
+  "failureUnsupportedLink": "هذا الرابط غير مدعوم.",
+  "failureVideoUnavailable": "هذا الفيديو غير متاح.",
+  "failurePrivateVideo": "هذا الفيديو خاص.",
+  "failureAgeRestricted": "لا يمكن تنزيل الفيديوهات المقيّدة بالعمر.",
+  "failureLiveNotSupported": "لا يمكن تنزيل البث المباشر.",
+  "failureStreamExpired": "انتهت صلاحية رابط التنزيل. جارٍ إعادة المحاولة…",
+  "failureStorageFull": "لا توجد مساحة تخزين كافية.",
+  "failurePermissionDenied": "تم رفض الإذن. اسمح بالوصول لحفظ الملفات.",
+  "failureFfmpegFailed": "تعذّرت معالجة الملف الذي تم تنزيله.",
+  "failureCancelled": "تم الإلغاء.",
+  "failureUnknown": "حدث خطأ ما. حاول مرة أخرى."
+}

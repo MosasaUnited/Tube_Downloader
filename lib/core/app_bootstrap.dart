@@ -3,6 +3,9 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:tube_downloader/core/configs/app_config.dart';
+import 'package:tube_downloader/core/di/dependency_injection.dart';
+import 'package:tube_downloader/core/download_core/domain/repos/settings_repo.dart';
+import 'package:tube_downloader/core/platform/window_service.dart';
 import 'package:tube_downloader/tube_downloader_app.dart';
 
 /// Swallows the message. Installed as the global `debugPrint` in flavours with
@@ -37,9 +40,10 @@ DebugPrintCallback installLoggingPolicy(AppConfig config) {
 
 /// The startup pipeline shared by both flavour entry points.
 ///
-/// **The order is load-bearing** (CLAUDE.md » Entry-point pipeline). Phase 1
-/// adds DI and the database here; Phase 2 adds download recovery and the queue
-/// start, both before `runApp`.
+/// **The order is load-bearing** (CLAUDE.md » Entry-point pipeline):
+/// logging policy → window → DI (opens the database) → settings load (so the
+/// first frame has the saved theme and language) → `runApp`. Phase 2 adds
+/// download recovery and the queue start before `runApp`.
 ///
 /// Runs inside [runZonedGuarded] so an error during initialization is reported
 /// instead of silently stranding the app before its first frame.
@@ -60,6 +64,10 @@ Future<void> bootstrapAndRun(AppConfig config) async {
         reportToConsole('Uncaught Flutter error: ${details.exception}');
         if (details.stack != null) reportToConsole('${details.stack}');
       };
+
+      await WindowService.configure(config);
+      await setupGetIt(config);
+      await getIt<SettingsRepo>().load();
 
       runApp(TubeDownloaderApp(config: config));
     },

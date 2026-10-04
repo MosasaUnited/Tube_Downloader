@@ -1,0 +1,8 @@
+# Flutter gen-l10n. English is the template; every key must exist in both
+# app_en.arb and app_ar.arb (test/l10n/arb_parity_test.dart fails otherwise).
+arb-dir: lib/l10n
+template-arb-file: app_en.arb
+output-dir: lib/l10n
+output-localization-file: app_localizations.dart
+output-class: AppLocalizations
+nullable-getter: false
