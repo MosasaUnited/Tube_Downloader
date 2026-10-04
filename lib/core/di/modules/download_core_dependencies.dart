@@ -4,11 +4,13 @@ import 'package:tube_downloader/core/download_core/data/engine/youtube_explode/e
 import 'package:tube_downloader/core/download_core/data/engine/youtube_explode/yte_media_resolver.dart';
 import 'package:tube_downloader/core/download_core/data/muxer/ffmpeg_kit_muxer.dart';
 import 'package:tube_downloader/core/download_core/data/platform/connectivity_network_monitor.dart';
+import 'package:tube_downloader/core/download_core/data/platform/method_channel_activity_assertion.dart';
 import 'package:tube_downloader/core/download_core/data/platform/io_file_system_gateway.dart';
 import 'package:tube_downloader/core/download_core/data/repos/download_repo_impl.dart';
 import 'package:tube_downloader/core/download_core/data/repos/library_repo_impl.dart';
 import 'package:tube_downloader/core/download_core/data/repos/settings_repo_impl.dart';
 import 'package:tube_downloader/core/download_core/data/transport/chunked_http_transport.dart';
+import 'package:tube_downloader/core/download_core/domain/repos/activity_assertion.dart';
 import 'package:tube_downloader/core/download_core/domain/repos/download_repo.dart';
 import 'package:tube_downloader/core/download_core/domain/repos/file_system_gateway.dart';
 import 'package:tube_downloader/core/download_core/domain/repos/library_repo.dart';
@@ -38,6 +40,9 @@ void registerDownloadCoreDependencies(GetIt getIt) {
     ..registerLazySingleton<FileSystemGateway>(
       () => IoFileSystemGateway(getIt()),
     )
+    ..registerLazySingleton<ActivityAssertion>(
+      MethodChannelActivityAssertion.new,
+    )
     ..registerLazySingleton<NetworkMonitor>(ConnectivityNetworkMonitor.new)
     // Engine — one gate paces every YouTube call app-wide.
     ..registerLazySingleton<ResolveGate>(ResolveGate.new)
@@ -64,7 +69,12 @@ void registerDownloadCoreDependencies(GetIt getIt) {
       ),
     )
     ..registerLazySingleton<DownloadQueueService>(
-      () => DownloadQueueService(getIt(), network: getIt(), gate: getIt()),
+      () => DownloadQueueService(
+        getIt(),
+        network: getIt(),
+        gate: getIt(),
+        activity: getIt(),
+      ),
       dispose: (queue) => queue.dispose(),
     )
     ..registerLazySingleton<RecoveryService>(

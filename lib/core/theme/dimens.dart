@@ -7,6 +7,7 @@ abstract final class Dimens {
   static const radiusButton = 12.0; // buttons, segmented controls, thumbnails
   static const radiusCard = 16.0; // cards, panes, settings groups
   static const radiusSheet = 24.0; // dialogs, bottom sheets
+  static const radiusPill = 999.0; // status pills: fully rounded ends
 
   // 8px rhythm with 4px half-steps.
   static const space4 = 4.0;
@@ -30,10 +31,14 @@ abstract final class Dimens {
   static const pageMarginCompact = 16.0;
   static const pageMarginWide = 24.0;
 
+  /// The "Save to" block in a footer bar (its path ellipsizes).
+  static const destinationWidth = 300.0;
+
   /// Readable width cap for forms and option cards on wide windows.
   static const maxContentWidth = 1120.0;
 
   static const borderWidth = 1.0;
   static const progressTrackHeight = 4.0;
   static const iconSize = 20.0;
+  static const iconSmall = 16.0; // inside chips and status lines
 }

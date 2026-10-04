@@ -1,31 +1,29 @@
 {
   "@@locale": "en",
-
   "appTitle": "Tube Downloader",
-
   "navNew": "New",
   "navDownloads": "Downloads",
   "navLibrary": "Library",
   "navSettings": "Settings",
-
   "titleNewDownload": "New Download",
   "titleDownloads": "Downloads",
   "titleLibrary": "Library",
   "titleSettings": "Settings",
-
   "activeDownloadsBadge": "{count, plural, =0{No active downloads} =1{1 active download} other{{count} active downloads}}",
   "@activeDownloadsBadge": {
     "description": "Screen-reader label of the Downloads navigation badge.",
-    "placeholders": { "count": { "type": "int" } }
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
-
   "newDownloadHint": "Paste a video or playlist link",
   "emptyDownloadsTitle": "No downloads yet",
   "emptyDownloadsBody": "Paste a link to start your first download.",
   "emptyDownloadsAction": "Start a download",
   "emptyLibraryTitle": "Your library is empty",
   "emptyLibraryBody": "Finished downloads appear here.",
-
   "settingsAppearance": "Appearance",
   "settingsTheme": "Theme",
   "themeSystem": "System",
@@ -34,7 +32,6 @@
   "settingsLanguage": "Language",
   "languageEnglish": "English",
   "languageArabic": "العربية",
-
   "actionRetry": "Retry",
   "actionCancel": "Cancel",
   "actionClose": "Close",
@@ -42,7 +39,6 @@
   "actionOk": "OK",
   "collapseSidebar": "Collapse sidebar",
   "expandSidebar": "Expand sidebar",
-
   "failureNoInternet": "You're offline. Check your connection and try again.",
   "failureServerUnreachable": "The server isn't responding right now. Try again in a moment.",
   "failureRateLimited": "Too many requests. Waiting a little before trying again.",
@@ -56,5 +52,171 @@
   "failurePermissionDenied": "Permission denied. Allow access to save files.",
   "failureFfmpegFailed": "Couldn't process the downloaded file.",
   "failureCancelled": "Cancelled.",
-  "failureUnknown": "Something went wrong. Try again."
+  "failureUnknown": "Something went wrong. Try again.",
+  "newDownloadTabSingle": "Single video",
+  "newDownloadTabPlaylist": "Playlist",
+  "newDownloadTabMultiple": "Multiple links",
+  "actionPaste": "Paste",
+  "actionFetch": "Fetch",
+  "actionDownload": "Download",
+  "actionView": "View",
+  "actionUseIt": "Use it",
+  "actionDismiss": "Dismiss",
+  "clipboardLinkDetected": "Link detected in clipboard",
+  "formatVideoAudio": "Video & Audio",
+  "formatAudioOnly": "Audio only",
+  "formatRecommended": "Recommended",
+  "formatMergeNote": "Video and audio are downloaded separately and merged — no quality loss.",
+  "downloadWithSize": "Download · {size}",
+  "@downloadWithSize": {
+    "placeholders": {
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "downloadStarted": "Download started",
+  "alreadyInDownloads": "Already in your downloads",
+  "saveDestination": "Save to",
+  "saveDestinationDefault": "Downloads › Tube Downloader",
+  "mediaViews": "{views} views",
+  "@mediaViews": {
+    "placeholders": {
+      "views": {
+        "type": "String"
+      }
+    }
+  },
+  "approximately": "~{value}",
+  "@approximately": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "liveBadge": "LIVE",
+  "fetchingDetails": "Fetching video details…",
+  "singleIdleTitle": "Paste a link to get started",
+  "singleIdleBody": "Videos, Shorts and live replays from a public link.",
+  "playlistVideosCount": "{count, plural, =1{1 video} other{{count} videos}}",
+  "@playlistVideosCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "playlistSelectAll": "Select all",
+  "playlistSelectedCount": "{selected} of {total} selected",
+  "@playlistSelectedCount": {
+    "placeholders": {
+      "selected": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "playlistQualityForAll": "Quality for all",
+  "playlistFilterHint": "Filter videos in this playlist",
+  "playlistSubfolder": "Create a subfolder named after the playlist",
+  "playlistDownloadCount": "{count, plural, =1{Download 1 video} other{Download {count} videos}}",
+  "@playlistDownloadCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "playlistUnavailable": "Private or unavailable",
+  "playlistLoadingMore": "Loading videos…",
+  "playlistIdleTitle": "Paste a playlist link",
+  "playlistIdleBody": "Choose the videos you want and one quality for all of them.",
+  "playlistItemsStopped": "Couldn't load the rest of the playlist.",
+  "qualityDefault": "Default",
+  "downloadsAdded": "{count, plural, =1{1 download added} other{{count} downloads added}}",
+  "@downloadsAdded": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "alreadyQueuedCount": "{count} already in your downloads",
+  "@alreadyQueuedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "actionRemove": "Remove",
+  "actionClearAll": "Clear all",
+  "actionImportTxt": "Import .txt",
+  "batchPasteTitle": "Paste links, one per line",
+  "batchHint": "https://youtube.com/watch?v=…\nhttps://youtu.be/…",
+  "batchLinksCount": "{count, plural, =1{1 link} other{{count} links}}",
+  "@batchLinksCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "batchResolvedItems": "Resolved items",
+  "batchDefaultQuality": "Default quality",
+  "batchSwipeHint": "Swipe or tap × to remove items",
+  "batchStatusResolving": "Resolving…",
+  "batchStatusReady": "Ready",
+  "batchStatusInvalid": "Invalid link",
+  "batchStatusDuplicate": "Duplicate",
+  "batchStatusFailed": "Failed",
+  "batchInvalidHint": "Not a YouTube video or playlist link",
+  "batchDuplicateOf": "Same as {position} — skipped",
+  "@batchDuplicateOf": {
+    "placeholders": {
+      "position": {
+        "type": "String"
+      }
+    }
+  },
+  "batchPlaylistHint": "Playlists download from the Playlist tab.",
+  "batchOpenPlaylist": "Open in Playlist",
+  "batchSummaryReady": "{count} ready",
+  "@batchSummaryReady": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "batchSummaryInvalid": "{count} invalid",
+  "@batchSummaryInvalid": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "batchSummaryDuplicate": "{count, plural, =1{1 duplicate} other{{count} duplicates}}",
+  "@batchSummaryDuplicate": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "batchSummaryFailed": "{count} failed",
+  "@batchSummaryFailed": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "batchIdleTitle": "Paste several links at once",
+  "batchIdleBody": "Each link is checked before it downloads. Duplicates and broken links are flagged.",
+  "dropLinksHere": "Drop links or a .txt file"
 }

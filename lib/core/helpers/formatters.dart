@@ -51,3 +51,21 @@ String _bytes(int bytes) {
 /// One decimal below 10 ("9.6 MB"), none above ("245 MB") — the precision the
 /// design shows.
 String _trim(double v) => v < 10 ? v.toStringAsFixed(1) : v.round().toString();
+
+/// 14M · 3.2K · 950 — view counts (Latin digits, like sizes).
+String formatCompactCount(int count) {
+  String trim(double v) => v >= 10 || v == v.roundToDouble()
+      ? v.round().toString()
+      : v.toStringAsFixed(1);
+  if (count >= 1000000000) return _isolate('${trim(count / 1000000000)}B');
+  if (count >= 1000000) return _isolate('${trim(count / 1000000)}M');
+  if (count >= 1000) return _isolate('${trim(count / 1000)}K');
+  return _isolate('$count');
+}
+
+/// 192 kbps
+String formatBitrate(int kbps) => _isolate('$kbps kbps');
+
+/// #01 · #12 · #128 — a playlist position.
+String formatPlaylistIndex(int index) =>
+    _isolate('#${index.toString().padLeft(2, '0')}');

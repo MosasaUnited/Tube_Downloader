@@ -4,6 +4,7 @@ import 'package:clock/clock.dart';
 import 'package:tube_downloader/core/download_core/domain/entities/app_settings.dart';
 import 'package:tube_downloader/core/download_core/domain/entities/download_enums.dart';
 import 'package:tube_downloader/core/download_core/domain/entities/download_task.dart';
+import 'package:tube_downloader/core/download_core/domain/repos/activity_assertion.dart';
 import 'package:tube_downloader/core/download_core/domain/repos/network_monitor.dart';
 import 'package:tube_downloader/core/download_core/domain/services/backoff_policy.dart';
 import 'package:tube_downloader/core/download_core/domain/services/download_job.dart';
@@ -22,12 +23,18 @@ class DownloadQueueService {
     required this._network,
     required this._gate,
     BackoffPolicy? backoff,
+    this._activity = const NoActivityAssertion(),
   }) : _backoff = backoff ?? BackoffPolicy();
 
   final JobDeps _d;
   final NetworkMonitor _network;
   final ResolveGate _gate;
   final BackoffPolicy _backoff;
+
+  /// Held while any job runs (macOS App Nap would otherwise throttle a
+  /// download whose window is in the background).
+  final ActivityAssertion _activity;
+  bool _activityHeld = false;
 
   final _jobs = <String, DownloadJob>{};
   final _live = <String, LiveProgress>{};
@@ -146,6 +153,7 @@ class DownloadQueueService {
 
   Future<void> dispose() async {
     _wake?.cancel();
+    _holdActivity(false);
     await _settingsSub?.cancel();
     await _netSub?.cancel();
     for (final job in _jobs.values.toList()) {
@@ -232,8 +240,17 @@ class DownloadQueueService {
 
   void _startJob(DownloadTask task) {
     final job = DownloadJob(task, _d, onProgress: _onProgress);
+    if (_jobs.isEmpty) _holdActivity(true);
     _jobs[task.id] = job;
     unawaited(_runSafely(job).then((result) => _onJobEnd(task, result)));
+  }
+
+  /// Begins / ends the OS activity assertion on the first job in and the
+  /// last job out — and only ends one that was begun.
+  void _holdActivity(bool hold) {
+    if (hold == _activityHeld) return;
+    _activityHeld = hold;
+    unawaited(hold ? _activity.begin() : _activity.end());
   }
 
   /// A job's own failures arrive as [JobFailed]; anything it THROWS (a bug, a
@@ -250,6 +267,7 @@ class DownloadQueueService {
 
   Future<void> _onJobEnd(DownloadTask task, JobResult result) async {
     _jobs.remove(task.id);
+    if (_jobs.isEmpty) _holdActivity(false);
     if (_live.remove(task.id) != null && !_liveController.isClosed) {
       _liveController.add(liveSnapshot);
     }

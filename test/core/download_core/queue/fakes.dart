@@ -8,6 +8,7 @@ import 'package:tube_downloader/core/download_core/domain/entities/format_select
 import 'package:tube_downloader/core/download_core/domain/entities/media_info.dart';
 import 'package:tube_downloader/core/download_core/domain/entities/parsed_link.dart';
 import 'package:tube_downloader/core/download_core/domain/entities/stream_target.dart';
+import 'package:tube_downloader/core/download_core/domain/repos/activity_assertion.dart';
 import 'package:tube_downloader/core/download_core/domain/repos/file_system_gateway.dart';
 import 'package:tube_downloader/core/download_core/domain/repos/media_muxer.dart';
 import 'package:tube_downloader/core/download_core/domain/repos/media_resolver.dart';
@@ -227,6 +228,17 @@ class FakeResolver implements MediaResolver {
 
   @override
   void close() {}
+}
+
+/// Records begin / end calls in order.
+class RecordingActivity implements ActivityAssertion {
+  final calls = <String>[];
+
+  @override
+  Future<void> begin() async => calls.add('begin');
+
+  @override
+  Future<void> end() async => calls.add('end');
 }
 
 class FakeNetwork implements NetworkMonitor {

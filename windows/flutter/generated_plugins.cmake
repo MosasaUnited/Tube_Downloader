@@ -4,6 +4,7 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   connectivity_plus
+  desktop_drop
   ffmpeg_kit_flutter_new_audio
   screen_retriever_windows
   window_manager

@@ -57,6 +57,7 @@ void main() {
   late FakeMuxer muxer;
   late FakeResolver resolver;
   late FakeNetwork network;
+  late RecordingActivity activity;
   late ResolveGate gate;
   late DownloadQueueService queue;
   late List<TaskOutcome> outcomes;
@@ -72,6 +73,7 @@ void main() {
     muxer = FakeMuxer(fs);
     resolver = FakeResolver();
     network = FakeNetwork(NetState.wifi);
+    activity = RecordingActivity();
     gate = ResolveGate(minSpacing: Duration.zero);
     queue = DownloadQueueService(
       JobDeps(
@@ -86,6 +88,7 @@ void main() {
       ),
       network: network,
       gate: gate,
+      activity: activity,
       backoff: BackoffPolicy(
         networkRetryDelays: const [
           Duration(milliseconds: 10),
@@ -160,6 +163,26 @@ void main() {
     transport.release();
     for (final id in ids) {
       await until(() async => await status(id) == TaskStatus.completed);
+    }
+  });
+
+  test('holds the OS activity assertion only while jobs run', () async {
+    await settings.update((s) => s.copyWith(maxConcurrent: 2));
+    transport.hold = Completer<void>();
+    final ids = [for (var i = 0; i < 3; i++) await enqueue(_request('$i'))];
+
+    await until(() => queue.running.length == 2, reason: 'two slots filled');
+    expect(activity.calls, ['begin'], reason: 'one assertion for all jobs');
+
+    transport.release();
+    for (final id in ids) {
+      await until(() async => await status(id) == TaskStatus.completed);
+    }
+    await until(() => activity.calls.last == 'end', reason: 'released');
+    // A slot freed and refilled may end and begin again, but never twice in
+    // a row: begin/end strictly alternate.
+    for (var i = 0; i < activity.calls.length; i++) {
+      expect(activity.calls[i], i.isEven ? 'begin' : 'end');
     }
   });
 
