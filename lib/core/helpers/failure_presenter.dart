@@ -3,10 +3,14 @@ import 'package:tube_downloader/core/error/app_failure.dart';
 import 'package:tube_downloader/core/error/failure_type.dart';
 import 'package:tube_downloader/core/helpers/l10n_extension.dart';
 import 'package:tube_downloader/core/helpers/snackbar_helper.dart';
+import 'package:tube_downloader/l10n/app_localizations.dart';
 
 /// The localized sentence for a failure. Never includes [AppFailure.debug].
-String failureMessage(BuildContext context, AppFailure failure) {
-  final l10n = context.l10n;
+String failureMessage(BuildContext context, AppFailure failure) =>
+    failureText(context.l10n, failure);
+
+/// [failureMessage] without a BuildContext (notifications).
+String failureText(AppLocalizations l10n, AppFailure failure) {
   return switch (failure.type) {
     FailureType.noInternet => l10n.failureNoInternet,
     FailureType.serverUnreachable => l10n.failureServerUnreachable,

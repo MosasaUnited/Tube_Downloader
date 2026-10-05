@@ -4,6 +4,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:tube_downloader/core/configs/app_config.dart';
 import 'package:tube_downloader/core/di/dependency_injection.dart';
+import 'package:tube_downloader/core/platform/download_notifier.dart';
+import 'package:tube_downloader/core/platform/notification_service.dart';
 import 'package:tube_downloader/core/download_core/domain/repos/settings_repo.dart';
 import 'package:tube_downloader/core/download_core/domain/services/download_queue_service.dart';
 import 'package:tube_downloader/core/download_core/domain/services/recovery_service.dart';
@@ -74,6 +76,9 @@ Future<void> bootstrapAndRun(AppConfig config) async {
       await getIt<SettingsRepo>().load();
       await getIt<RecoveryService>().run();
       await getIt<DownloadQueueService>().start();
+      // Notifications are best effort: a failure here never blocks launch.
+      await getIt<NotificationService>().init();
+      getIt<DownloadNotifier>().start();
 
       runApp(TubeDownloaderApp(config: config));
     },

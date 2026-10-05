@@ -1,3 +1,4 @@
+import 'package:tube_downloader/core/download_core/domain/entities/storage_space.dart';
 import 'package:tube_downloader/core/error/result.dart';
 
 /// Every file-system operation the download core needs, so domain code
@@ -30,4 +31,12 @@ abstract interface class FileSystemGateway {
 
   /// Free space where downloads are saved; null when the platform can't say.
   Future<int?> freeBytes();
+
+  /// Free and total space of the save location's volume (the storage card
+  /// and meter); null when the platform can't say.
+  Future<StorageSpace?> space();
+
+  /// The folder downloads are saved to: the one chosen in Settings, else the
+  /// platform default; null when the platform can't say.
+  Future<String?> saveDirectory();
 }

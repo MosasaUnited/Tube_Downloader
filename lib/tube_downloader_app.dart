@@ -1,8 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tube_downloader/core/configs/app_config.dart';
 import 'package:tube_downloader/core/di/dependency_injection.dart';
+import 'package:tube_downloader/core/platform/notification_service.dart';
+import 'package:tube_downloader/core/platform/share_intent_service.dart';
 import 'package:tube_downloader/core/helpers/snackbar_helper.dart';
 import 'package:tube_downloader/core/router/app_router.dart';
 import 'package:tube_downloader/core/theme/app_theme.dart';
@@ -30,7 +34,21 @@ class _TubeDownloaderAppState extends State<TubeDownloaderApp> {
   late final GoRouter _router = widget.router ?? buildAppRouter();
 
   @override
+  void initState() {
+    super.initState();
+    // A tapped notification opens its tab (Library / Downloads).
+    getIt<NotificationService>().onOpen = _router.go;
+    // A link shared from another app (Android) opens New Download with it.
+    unawaited(
+      getIt<ShareIntentService>().start(
+        onShared: () => _router.go(AppRoutes.newDownload),
+      ),
+    );
+  }
+
+  @override
   void dispose() {
+    getIt<NotificationService>().onOpen = null;
     if (widget.router == null) _router.dispose();
     super.dispose();
   }

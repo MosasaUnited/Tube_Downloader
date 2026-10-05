@@ -438,5 +438,85 @@
         "type": "int"
       }
     }
-  }
+  },
+  "settingsStorage": "Storage",
+  "storageFreeOfTotal": "{free} free of {total}",
+  "@storageFreeOfTotal": {
+    "placeholders": {
+      "free": {
+        "type": "String"
+      },
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "storageUsedPercent": "{percent} used",
+  "@storageUsedPercent": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "storageUnknown": "Free space isn't available on this device.",
+  "settingsDownloads": "Downloads",
+  "settingsSaveLocation": "Save location",
+  "settingsChangeFolder": "Change",
+  "settingsUseDefaultFolder": "Use default",
+  "settingsSaveLocationIos": "Downloads are saved in the app's folder in the Files app.",
+  "settingsDefaultFormat": "Default format",
+  "settingsVideoQuality": "Default video quality",
+  "settingsVideoQualityHint": "The best available at or below this.",
+  "settingsAudioQuality": "MP3 quality",
+  "settingsConcurrent": "Downloads at once",
+  "settingsConcurrentHint": "More than 3 can make YouTube slow you down.",
+  "actionDecrease": "Decrease",
+  "actionIncrease": "Increase",
+  "settingsNaming": "File names",
+  "settingsNamingPreview": "Preview: {name}",
+  "@settingsNamingPreview": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "actionEdit": "Edit",
+  "actionSave": "Save",
+  "actionReset": "Reset",
+  "templateTitle": "File name pattern",
+  "templateHelp": "Tap a field to add it. Text between fields is kept as typed.",
+  "templateUnknown": "Unknown field: {fields}",
+  "@templateUnknown": {
+    "placeholders": {
+      "fields": {
+        "type": "String"
+      }
+    }
+  },
+  "templateEmpty": "The pattern can't be empty.",
+  "templateSampleTitle": "Ocean Sunrise Timelapse",
+  "templateSampleChannel": "Nature Channel",
+  "fieldTitle": "Title",
+  "fieldChannel": "Channel",
+  "fieldQuality": "Quality",
+  "fieldDate": "Date",
+  "fieldIndex": "Playlist #",
+  "fieldId": "Video ID",
+  "settingsPlaylistFolders": "Playlist subfolders",
+  "settingsPlaylistFoldersHint": "Each playlist goes into a folder named after it.",
+  "settingsBehavior": "Network & behavior",
+  "settingsWifiOnly": "Download on Wi-Fi only",
+  "settingsWifiOnlyHint": "Pauses on mobile data and continues on Wi-Fi.",
+  "settingsClipboard": "Detect copied links",
+  "settingsClipboardHint": "Offers a link you copied when you open New Download.",
+  "settingsNotifications": "Notifications",
+  "settingsNotificationsHint": "When a download finishes or fails.",
+  "settingsAbout": "About",
+  "settingsLicenses": "Open-source licenses",
+  "notificationDoneTitle": "Download complete",
+  "notificationFailedTitle": "Download failed",
+  "notificationsBlocked": "Notifications are turned off for Tube DL in your system settings.",
+  "settingsSaveLocationAndroid": "Videos are saved to Movies › Tube Downloader, audio to Music › Tube Downloader."
 }

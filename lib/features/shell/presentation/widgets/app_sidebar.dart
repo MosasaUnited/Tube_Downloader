@@ -8,6 +8,7 @@ import 'package:tube_downloader/core/theme/dimens.dart';
 import 'package:tube_downloader/core/theme/styles.dart';
 import 'package:tube_downloader/features/shell/logic/nav_badge_cubit/nav_badge_cubit.dart';
 import 'package:tube_downloader/features/shell/presentation/widgets/nav_destinations.dart';
+import 'package:tube_downloader/features/shell/presentation/widgets/storage_meter.dart';
 
 /// The 240px desktop sidebar from the design: full-width rows, the selected
 /// one filled with the brand violet. Collapses to the 72px NavigationRail
@@ -70,6 +71,8 @@ class AppSidebar extends StatelessWidget {
                 onTap: () => onSelect(index),
               ),
             ),
+          const Spacer(),
+          const StorageMeter(),
         ],
       ),
     );

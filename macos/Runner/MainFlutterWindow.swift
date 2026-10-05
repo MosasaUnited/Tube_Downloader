@@ -14,6 +14,7 @@ class MainFlutterWindow: NSWindow {
 
     RegisterGeneratedPlugins(registry: flutterViewController)
     registerActivityChannel(messenger: flutterViewController.engine.binaryMessenger)
+    registerStorageChannel(messenger: flutterViewController.engine.binaryMessenger)
 
     super.awakeFromNib()
   }
@@ -41,6 +42,25 @@ class MainFlutterWindow: NSWindow {
       default:
         result(FlutterMethodNotImplemented)
       }
+    }
+  }
+
+  /// `com.tubedownloader.app/storage`: "space" {path} → {free, total} bytes of
+  /// the volume holding `path` (free = what macOS counts as available for
+  /// important data, purgeable space included), or nil when unreadable.
+  private func registerStorageChannel(messenger: FlutterBinaryMessenger) {
+    let channel = FlutterMethodChannel(name: "com.tubedownloader.app/storage", binaryMessenger: messenger)
+    channel.setMethodCallHandler { call, result in
+      guard call.method == "space" else { return result(FlutterMethodNotImplemented) }
+      guard let path = (call.arguments as? [String: Any])?["path"] as? String else {
+        return result(FlutterError(code: "args", message: "path missing", details: nil))
+      }
+      let keys: Set<URLResourceKey> = [.volumeAvailableCapacityForImportantUsageKey, .volumeTotalCapacityKey]
+      guard let values = try? URL(fileURLWithPath: path).resourceValues(forKeys: keys),
+            let free = values.volumeAvailableCapacityForImportantUsage,
+            let total = values.volumeTotalCapacity
+      else { return result(nil) }
+      result(["free": free, "total": Int64(total)])
     }
   }
 }

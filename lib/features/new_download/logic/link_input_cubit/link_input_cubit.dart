@@ -1,20 +1,35 @@
+import 'dart:async';
+
 import 'package:cross_file/cross_file.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tube_downloader/core/download_core/domain/entities/parsed_link.dart';
 import 'package:tube_downloader/core/download_core/domain/link/link_parser.dart';
 import 'package:tube_downloader/core/download_core/domain/repos/settings_repo.dart';
 import 'package:tube_downloader/core/platform/clipboard_service.dart';
+import 'package:tube_downloader/core/platform/incoming_links.dart';
 import 'package:tube_downloader/core/platform/link_file_reader.dart';
 import 'package:tube_downloader/features/new_download/domain/link_batch_analyzer.dart';
 import 'package:tube_downloader/features/new_download/logic/link_input_cubit/link_input_state.dart';
 
 class LinkInputCubit extends Cubit<LinkInputState> {
-  LinkInputCubit(this._clipboard, this._settings, this._files)
+  LinkInputCubit(this._clipboard, this._settings, this._files, this._incoming)
     : super(const LinkInputState());
 
   final ClipboardService _clipboard;
   final SettingsRepo _settings;
   final LinkFileReader _files;
+  final IncomingLinks _incoming;
+  StreamSubscription<String>? _incomingSub;
+
+  /// Links shared into the app (Android's share sheet): the one waiting when
+  /// the screen opens, then each new one.
+  void listenForShares() {
+    final pending = _incoming.takePending();
+    if (pending != null) receive(pending);
+    _incomingSub ??= _incoming.stream.listen((text) {
+      if (!isClosed) receive(text);
+    });
+  }
 
   void setMode(NewDownloadMode mode) => emit(state.copyWith(mode: mode));
 
@@ -102,4 +117,10 @@ class LinkInputCubit extends Cubit<LinkInputState> {
   }
 
   void dismissSuggestion() => emit(state.copyWith(clipboardSuggestion: null));
+
+  @override
+  Future<void> close() async {
+    await _incomingSub?.cancel();
+    return super.close();
+  }
 }

@@ -7,6 +7,7 @@ import 'package:tube_downloader/core/download_core/domain/entities/format_option
 import 'package:tube_downloader/core/download_core/domain/entities/format_selector.dart';
 import 'package:tube_downloader/core/download_core/domain/entities/media_info.dart';
 import 'package:tube_downloader/core/download_core/domain/entities/parsed_link.dart';
+import 'package:tube_downloader/core/download_core/domain/entities/storage_space.dart';
 import 'package:tube_downloader/core/download_core/domain/entities/stream_target.dart';
 import 'package:tube_downloader/core/download_core/domain/repos/activity_assertion.dart';
 import 'package:tube_downloader/core/download_core/domain/repos/file_system_gateway.dart';
@@ -78,6 +79,14 @@ class FakeFileSystem implements FileSystemGateway {
 
   @override
   Future<int?> freeBytes() async => free;
+
+  @override
+  Future<String?> saveDirectory() async => '/downloads';
+
+  @override
+  Future<StorageSpace?> space() async => free == null
+      ? null
+      : StorageSpace(freeBytes: free!, totalBytes: free! * 2);
 }
 
 /// Writes half the stream, then waits for [release] (or a stop), then the

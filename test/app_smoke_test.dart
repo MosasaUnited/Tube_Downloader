@@ -90,6 +90,18 @@ void main() {
       TextDirection.ltr,
     );
 
+    // Appearance is below Storage and Downloads: scroll to it, as a user would.
+    await tester.scrollUntilVisible(
+      find.text('العربية'),
+      300,
+      scrollable: find
+          .descendant(
+            of: find.byType(SettingsScreen),
+            matching: find.byType(Scrollable),
+          )
+          .first,
+    );
+    await tester.pumpAndSettle();
     await tester.tap(find.text('العربية'));
     await tester.pumpAndSettle();
 

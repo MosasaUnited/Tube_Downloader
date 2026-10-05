@@ -23,7 +23,9 @@ class NewDownloadScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<LinkInputCubit>(
-      create: (_) => getIt<LinkInputCubit>()..checkClipboard(),
+      create: (_) => getIt<LinkInputCubit>()
+        ..checkClipboard()
+        ..listenForShares(),
       child: const _NewDownloadBody(),
     );
   }

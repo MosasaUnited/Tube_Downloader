@@ -18,6 +18,7 @@ import 'package:tube_downloader/core/error/app_failure.dart';
 import 'package:tube_downloader/core/error/failure_type.dart';
 import 'package:tube_downloader/core/error/result.dart';
 import 'package:tube_downloader/core/platform/clipboard_service.dart';
+import 'package:tube_downloader/core/platform/incoming_links.dart';
 import 'package:tube_downloader/core/platform/link_file_reader.dart';
 import 'package:tube_downloader/features/new_download/domain/default_format_picker.dart';
 import 'package:tube_downloader/features/new_download/domain/usecases/enqueue_downloads_use_case.dart';
@@ -158,7 +159,9 @@ void main() {
     late _Clipboard clipboard;
     late _Settings settings;
     late _Files files;
+    late IncomingLinks incoming;
     setUp(() {
+      incoming = IncomingLinks();
       clipboard = _Clipboard();
       settings = _Settings();
       files = _Files();
@@ -168,7 +171,7 @@ void main() {
     test(
       'a playlist link switches to Playlist, a video link back to Single',
       () {
-        final cubit = LinkInputCubit(clipboard, settings, files)
+        final cubit = LinkInputCubit(clipboard, settings, files, incoming)
           ..setText(
             'https://www.youtube.com/playlist?list=PLOU2XLYxmsIJ7ss3D9tXk2Tkk_1h2zNZb',
           );
@@ -179,14 +182,14 @@ void main() {
     );
 
     test('Multiple links never switches away', () {
-      final cubit = LinkInputCubit(clipboard, settings, files)
+      final cubit = LinkInputCubit(clipboard, settings, files, incoming)
         ..setMode(NewDownloadMode.multiple)
         ..setText('https://youtu.be/R6MlUcmOul8');
       expect(cubit.state.mode, NewDownloadMode.multiple);
     });
 
     test('one received link opens in its own tab and fetches', () {
-      final cubit = LinkInputCubit(clipboard, settings, files)
+      final cubit = LinkInputCubit(clipboard, settings, files, incoming)
         ..receive(
           'see https://www.youtube.com/playlist?list=PLOU2XLYxmsIJ7ss3D9tXk2Tkk_1h2zNZb',
         );
@@ -197,7 +200,7 @@ void main() {
     });
 
     test('several received links (or any on Multiple) go to the batch', () {
-      final cubit = LinkInputCubit(clipboard, settings, files)
+      final cubit = LinkInputCubit(clipboard, settings, files, incoming)
         ..receive('https://youtu.be/R6MlUcmOul8\nhttps://youtu.be/aqz-KE-bpKQ');
       expect(
         (cubit.state.mode, cubit.state.inboxToken, cubit.state.fetchToken),
@@ -211,14 +214,28 @@ void main() {
     test('dropped files are read and received', () async {
       when(() => files.readDropped(any()))
           .thenAnswer((_) async => 'https://youtu.be/R6MlUcmOul8');
-      final cubit = LinkInputCubit(clipboard, settings, files);
+      final cubit = LinkInputCubit(clipboard, settings, files, incoming);
       await cubit.receiveFiles(const []);
       expect(cubit.state.text, 'https://youtu.be/R6MlUcmOul8');
       expect(cubit.state.fetchToken, 1);
     });
 
+    test('a shared link: waiting at open, then live', () async {
+      incoming.add('https://youtu.be/R6MlUcmOul8');
+      final cubit = LinkInputCubit(clipboard, settings, files, incoming)
+        ..listenForShares();
+      expect(cubit.state.text, 'https://youtu.be/R6MlUcmOul8');
+      expect(cubit.state.fetchToken, 1);
+
+      incoming.add('https://youtu.be/R6MlUcmOul8 https://youtu.be/aqz-KE-bpKQ');
+      await pumpEventQueue();
+      expect(cubit.state.mode, NewDownloadMode.multiple, reason: 'several');
+      expect(incoming.takePending(), isNull, reason: 'delivered live');
+      await cubit.close();
+    });
+
     test('fetch only fires for a link the current tab can take', () {
-      final cubit = LinkInputCubit(clipboard, settings, files)
+      final cubit = LinkInputCubit(clipboard, settings, files, incoming)
         ..setText('nonsense');
       cubit.fetch();
       expect(cubit.state.fetchToken, 0);
@@ -231,7 +248,7 @@ void main() {
     test('clipboard: suggests a supported link once, not what is already typed, not when disabled', () async {
       when(() => clipboard.readText())
           .thenAnswer((_) async => 'https://youtu.be/R6MlUcmOul8');
-      final cubit = LinkInputCubit(clipboard, settings, files);
+      final cubit = LinkInputCubit(clipboard, settings, files, incoming);
       await cubit.checkClipboard();
       expect(cubit.state.clipboardSuggestion, 'https://youtu.be/R6MlUcmOul8');
 

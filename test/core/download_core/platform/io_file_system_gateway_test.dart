@@ -4,6 +4,7 @@ import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tube_downloader/core/database/app_database.dart';
 import 'package:tube_downloader/core/download_core/data/platform/io_file_system_gateway.dart';
+import 'package:tube_downloader/core/download_core/data/platform/media_publisher.dart';
 import 'package:tube_downloader/core/download_core/data/repos/settings_repo_impl.dart';
 import 'package:tube_downloader/core/error/result.dart';
 
@@ -45,6 +46,41 @@ void main() {
     await fs.deleteWorkDir('t1');
     expect(await fs.workDirTaskIds(), isEmpty);
   });
+
+  test(
+    'Android: publish hands the file to MediaStore (no folder chosen)',
+    () async {
+      final media = _FakeMediaPublisher();
+      final android = IoFileSystemGateway(
+        settings,
+        supportDirectory: () async => Directory('${root.path}/support'),
+        defaultSaveDirectory: () async => Directory('${root.path}/Documents'),
+        mediaPublisher: media,
+      );
+      final source = await partial('t1', 'out.mp4', 10);
+      final result = await android.publish(
+        sourcePath: source,
+        fileName: 'Clip.mp4',
+        subDir: 'Mix',
+      );
+      expect(
+        (result as Success<String>).data,
+        '/storage/Movies/Tube Downloader/Mix/Clip.mp4',
+      );
+      expect(media.calls, ['$source|Clip.mp4|Mix']);
+
+      media.fail = true;
+      final failed = await android.publish(
+        sourcePath: source,
+        fileName: 'Clip.mp4',
+      );
+      expect(
+        failed,
+        isA<Failure<String>>(),
+        reason: 'a channel error is a failure',
+      );
+    },
+  );
 
   test('publish moves into the default folder and never overwrites', () async {
     final first = await fs.publish(
@@ -89,4 +125,20 @@ void main() {
     );
     expect(result, isA<Failure<String>>());
   });
+}
+
+class _FakeMediaPublisher implements MediaPublisher {
+  final calls = <String>[];
+  var fail = false;
+
+  @override
+  Future<String> publish({
+    required String sourcePath,
+    required String fileName,
+    String? subDir,
+  }) async {
+    if (fail) throw StateError('MediaStore insert failed');
+    calls.add('$sourcePath|$fileName|$subDir');
+    return '/storage/Movies/Tube Downloader/$subDir/$fileName';
+  }
 }

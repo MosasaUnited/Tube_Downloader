@@ -1,6 +1,11 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
+
 import 'package:path_provider/path_provider.dart';
+import 'package:tube_downloader/core/download_core/data/platform/media_publisher.dart';
+import 'package:tube_downloader/core/download_core/data/platform/volume_space_probe.dart';
+import 'package:tube_downloader/core/download_core/domain/entities/storage_space.dart';
 import 'package:tube_downloader/core/download_core/domain/repos/file_system_gateway.dart';
 import 'package:tube_downloader/core/download_core/domain/repos/settings_repo.dart';
 import 'package:tube_downloader/core/error/failure_mapper.dart';
@@ -11,19 +16,27 @@ import 'package:tube_downloader/core/error/result.dart';
 /// Partial files live under Application Support (`work/<taskId>/`), never in
 /// the user's folders; a finished file is moved into the save folder:
 /// Settings' choice, else Downloads/Tube Downloader on desktop and the app's
-/// Documents on mobile (iOS shows it in the Files app). Android MediaStore
-/// publishing to the public Downloads folder lands in Phase 6.
+/// Documents on iOS (shown in the Files app); on Android finished files go
+/// through MediaStore to Movies / Music › Tube Downloader ([MediaPublisher]).
 class IoFileSystemGateway implements FileSystemGateway {
   IoFileSystemGateway(
     this._settings, {
     Future<Directory> Function()? supportDirectory,
     Future<Directory> Function()? defaultSaveDirectory,
+    this._probe = const PlatformVolumeSpaceProbe(),
+    MediaPublisher? mediaPublisher,
   }) : _supportDirectory = supportDirectory ?? getApplicationSupportDirectory,
-       _defaultSaveDirectory = defaultSaveDirectory ?? _platformSaveDirectory;
+       _defaultSaveDirectory = defaultSaveDirectory ?? _platformSaveDirectory,
+       // Android: finished files go to the public media folders.
+       _mediaPublisher =
+           mediaPublisher ??
+           (Platform.isAndroid ? const ChannelMediaPublisher() : null);
 
   final SettingsRepo _settings;
   final Future<Directory> Function() _supportDirectory;
   final Future<Directory> Function() _defaultSaveDirectory;
+  final VolumeSpaceProbe _probe;
+  final MediaPublisher? _mediaPublisher;
 
   static const appFolderName = 'Tube Downloader';
 
@@ -104,6 +117,16 @@ class IoFileSystemGateway implements FileSystemGateway {
   }) async {
     try {
       final saveRoot = _settings.current.saveDirectory;
+      final media = _mediaPublisher;
+      if (media != null && saveRoot == null) {
+        return Result.success(
+          await media.publish(
+            sourcePath: sourcePath,
+            fileName: fileName,
+            subDir: subDir,
+          ),
+        );
+      }
       var dir = saveRoot == null
           ? await _defaultSaveDirectory()
           : Directory(saveRoot);
@@ -142,8 +165,25 @@ class IoFileSystemGateway implements FileSystemGateway {
     }
   }
 
-  /// Platform free-space APIs arrive with Phase 6; until then the storage
-  /// check is skipped (null = unknown).
   @override
-  Future<int?> freeBytes() async => null;
+  Future<int?> freeBytes() async => (await space())?.freeBytes;
+
+  @override
+  Future<StorageSpace?> space() async {
+    final dir = await saveDirectory();
+    return dir == null ? null : _probe.spaceOf(dir);
+  }
+
+  @override
+  Future<String?> saveDirectory() async {
+    final chosen = _settings.current.saveDirectory;
+    if (chosen != null) return chosen;
+    try {
+      return (await _defaultSaveDirectory()).path;
+    } on Object catch (e) {
+      // Display only (Settings, the storage meter): unknown is fine.
+      debugPrint('IoFileSystemGateway: no default folder (${e.runtimeType})');
+      return null;
+    }
+  }
 }
