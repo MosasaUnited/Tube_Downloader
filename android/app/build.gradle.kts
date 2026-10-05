@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
@@ -22,6 +24,15 @@ flavorEntryPoints.forEach { (flavor, entry) ->
         )
     }
 }
+// Release signing (docs/release.md): android/key.properties, git-ignored and
+// kept with the keystore outside the repo. Without it, release builds are signed
+// with the debug key: fine for local testing, never for distribution.
+val keyProperties = Properties().apply {
+    val file = rootProject.file("key.properties")
+    if (file.exists()) file.inputStream().use { load(it) }
+}
+val hasReleaseKey = keyProperties.getProperty("storeFile") != null
+
 // Only production is ever distributed (owner decision, 2026-10-04): a development
 // release APK/bundle is refused outright. Use --debug or --profile for dev builds.
 if (releaseTasks.any { it.contains("development", ignoreCase = true) }) {
@@ -75,11 +86,20 @@ android {
         }
     }
 
+    signingConfigs {
+        if (hasReleaseKey) {
+            create("release") {
+                storeFile = file(keyProperties.getProperty("storeFile"))
+                storePassword = keyProperties.getProperty("storePassword")
+                keyAlias = keyProperties.getProperty("keyAlias")
+                keyPassword = keyProperties.getProperty("keyPassword")
+            }
+        }
+    }
+
     buildTypes {
         release {
-            // Debug-key signing until Phase 7 (release keystore created by the owner,
-            // stored outside the repo, wired through android/key.properties).
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = signingConfigs.getByName(if (hasReleaseKey) "release" else "debug")
         }
     }
 }

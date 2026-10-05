@@ -1,0 +1,11 @@
+<!-- Tube Downloader app icon: "The Drop Tube" (Stitch brand board, hero concept). Rendered by tool/render_icons.sh. -->
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g transform="translate(512 512) scale(0.78) translate(-512 -512)">
+  <g transform="rotate(-8 512 490)">
+    <rect x="362" y="190" width="300" height="600" rx="150" stroke="#FFFFFF" stroke-width="34"/>
+    <path d="M 512 250 L 512 440" stroke="#FFFFFF" stroke-width="34" stroke-linecap="round"/>
+    <path d="M 512 680 L 404 480 Q 394 462 414 462 L 610 462 Q 630 462 620 480 Z" fill="#FFFFFF"/>
+  </g>
+  <rect x="382" y="855" width="260" height="34" rx="17" fill="#FFFFFF"/>
+</g>
+</svg>

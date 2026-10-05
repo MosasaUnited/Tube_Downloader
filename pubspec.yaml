@@ -83,11 +83,7 @@ dev_dependencies:
   fake_async: ^1.3.3
   integration_test:
     sdk: flutter
-
-# For information on the generic Dart part of this file, see the
-# following page: https://dart.dev/tools/pub/pubspec
-
-# The following section is specific to Flutter packages.
+  flutter_launcher_icons: ^0.14.0
 flutter:
   uses-material-design: true
   # gen-l10n from lib/l10n/*.arb (configured in l10n.yaml).

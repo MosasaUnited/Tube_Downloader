@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- The app's dark background (ColorsManager.darkBackground): launch splash
+         and the window behind Flutter, so a cold start never flashes white. -->
+    <color name="launch_background">#0B0D14</color>
+</resources>

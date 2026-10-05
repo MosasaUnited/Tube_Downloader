@@ -1,0 +1,127 @@
+<!-- Tube Downloader app icon: "The Drop Tube" (Stitch brand board, hero concept). Rendered by tool/render_icons.sh. -->
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
+<defs>
+                <!-- Deep night background -->
+                <linearGradient id="hero_bg" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#0B0D14"/>
+                  <stop offset="45%" stop-color="#141824"/>
+                  <stop offset="100%" stop-color="#2A2550"/>
+                </linearGradient>
+
+                <!-- Flow Stream & Play Triangle Gradient -->
+                <linearGradient id="hero_core_grad" x1="50%" y1="0%" x2="50%" y2="100%">
+                  <stop offset="0%" stop-color="#6C5CE7"/>
+                  <stop offset="70%" stop-color="#00C2FF"/>
+                  <stop offset="100%" stop-color="#75D1FF"/>
+                </linearGradient>
+
+                <!-- Glass Capsule Gradient (Translucent Frosted) -->
+                <linearGradient id="hero_glass_grad" x1="20%" y1="0%" x2="80%" y2="100%">
+                  <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.22"/>
+                  <stop offset="40%" stop-color="#6C5CE7" stop-opacity="0.12"/>
+                  <stop offset="100%" stop-color="#00C2FF" stop-opacity="0.18"/>
+                </linearGradient>
+
+                <!-- Capsule Rim Stroke Gradient -->
+                <linearGradient id="hero_glass_stroke" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#F2F4F8" stop-opacity="0.6"/>
+                  <stop offset="40%" stop-color="#262C3D" stop-opacity="0.3"/>
+                  <stop offset="100%" stop-color="#00C2FF" stop-opacity="0.8"/>
+                </linearGradient>
+
+                <!-- Outer glow filter for triangle & stream -->
+                <filter id="glow_stream" x="-30%" y="-30%" width="160%" height="160%">
+                  <feGaussianBlur stdDeviation="32" result="blur"/>
+                  <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+                </filter>
+                <filter id="glow_bar" x="-40%" y="-40%" width="180%" height="180%">
+                  <feGaussianBlur stdDeviation="20" result="blur2"/>
+                  <feComposite in="SourceGraphic" in2="blur2" operator="over"/>
+                </filter>
+                <clipPath id="mac_shape"><rect x="100" y="100" width="824" height="824" rx="185"/></clipPath>
+  <filter id="mac_shadow" x="-10%" y="-10%" width="120%" height="125%"><feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#000000" flood-opacity="0.35"/></filter>
+</defs>
+<rect x="100" y="100" width="824" height="824" rx="185" fill="#0B0D14" filter="url(#mac_shadow)"/>
+<g clip-path="url(#mac_shape)">
+  <g transform="translate(100 100) scale(0.8046875)">
+
+
+              <!-- LAYER 1: Deep night canvas background -->
+              <rect width="1024" height="1024" fill="url(#hero_bg)"/>
+
+              <!-- Ambient backdrop mesh circles -->
+              <circle cx="512" cy="512" r="340" fill="#6C5CE7" fill-opacity="0.15" filter="url(#glow_stream)"/>
+              <circle cx="512" cy="740" r="220" fill="#00C2FF" fill-opacity="0.12" filter="url(#glow_bar)"/>
+
+              <!-- Subtle grid lines for precision utility aesthetic -->
+              <g stroke="#262C3D" stroke-opacity="0.35" stroke-dasharray="8 8">
+                <circle cx="512" cy="512" r="410"/>
+                <line x1="100" y1="512" x2="924" y2="512"/>
+                <line x1="512" y1="100" x2="512" y2="924"/>
+              </g>
+
+              <!-- LAYER 2: Frosted Glass Capsule ("The Drop Tube") standing tilted at -8 deg -->
+              <g transform="rotate(-8 512 490)">
+                <!-- Glass Capsule Shadow -->
+                <rect x="362" y="190" width="300" height="600" rx="150" fill="#000000" fill-opacity="0.45" filter="url(#glow_stream)"/>
+
+                <!-- Capsule Body -->
+                <rect x="362" y="190" width="300" height="600" rx="150" fill="url(#hero_glass_grad)" stroke="url(#hero_glass_stroke)" stroke-width="6"/>
+
+                <!-- Specular highlights along glass curve -->
+                <path d="M 402 270 Q 382 490 402 710" stroke="#F2F4F8" stroke-opacity="0.35" stroke-width="4" stroke-linecap="round"/>
+                <ellipse cx="512" cy="225" rx="80" ry="18" fill="#F2F4F8" fill-opacity="0.25"/>
+
+                <!-- Film-strip sprocket holes along right capsule edge (3 ticks) -->
+                <!-- Ticket 1 (Top) -->
+                <rect x="626" y="330" width="22" height="38" rx="8" fill="#0B0D14" stroke="#00C2FF" stroke-width="3" stroke-opacity="0.8"/>
+                <!-- Ticket 2 (Mid) -->
+                <rect x="626" y="470" width="22" height="38" rx="8" fill="#0B0D14" stroke="#00C2FF" stroke-width="3" stroke-opacity="0.8"/>
+                <!-- Ticket 3 (Bottom) -->
+                <rect x="626" y="610" width="22" height="38" rx="8" fill="#0B0D14" stroke="#00C2FF" stroke-width="3" stroke-opacity="0.8"/>
+
+                <!-- Left film tick counters for balance -->
+                <rect x="376" y="330" width="22" height="38" rx="8" fill="#0B0D14" stroke="#6C5CE7" stroke-width="3" stroke-opacity="0.8"/>
+                <rect x="376" y="470" width="22" height="38" rx="8" fill="#0B0D14" stroke="#6C5CE7" stroke-width="3" stroke-opacity="0.8"/>
+                <rect x="376" y="610" width="22" height="38" rx="8" fill="#0B0D14" stroke="#6C5CE7" stroke-width="3" stroke-opacity="0.8"/>
+              </g>
+
+              <!-- LAYER 3: Core Energy Stream & Down-pointing Play Triangle -->
+              <g transform="rotate(-8 512 490)">
+                <!-- Light stream entering from top -->
+                <path d="M 512 240 L 512 470" stroke="url(#hero_core_grad)" stroke-width="26" stroke-linecap="round" filter="url(#glow_stream)"/>
+                <path d="M 512 250 L 512 460" stroke="#F2F4F8" stroke-width="10" stroke-linecap="round"/>
+
+                <!-- Side energetic beam guides -->
+                <line x1="472" y1="360" x2="472" y2="440" stroke="#00C2FF" stroke-width="4" stroke-opacity="0.5" stroke-linecap="round"/>
+                <line x1="552" y1="360" x2="552" y2="440" stroke="#00C2FF" stroke-width="4" stroke-opacity="0.5" stroke-linecap="round"/>
+
+                <!-- The Downward Play Triangle (Simultaneous Play & Download arrow) -->
+                <!-- Vertex pointing down at (512, 680), base from (400, 480) to (624, 480) -->
+                <path d="M 512 680 L 404 480 Q 394 462 414 462 L 610 462 Q 630 462 620 480 Z" fill="url(#hero_core_grad)" filter="url(#glow_stream)"/>
+
+                <!-- Crisp inner geometric face -->
+                <path d="M 512 660 L 420 482 L 604 482 Z" fill="url(#hero_core_grad)"/>
+
+                <!-- Bevel highlight along top left edge -->
+                <line x1="416" y1="472" x2="512" y2="650" stroke="#FFFFFF" stroke-width="8" stroke-linecap="round" stroke-opacity="0.85"/>
+                <!-- Secondary rim highlight on top horizontal base -->
+                <line x1="424" y1="472" x2="600" y2="472" stroke="#F2F4F8" stroke-width="5" stroke-linecap="round" stroke-opacity="0.7"/>
+
+                <!-- Center glowing focal node -->
+                <circle cx="512" cy="540" r="14" fill="#FFFFFF" filter="url(#glow_bar)"/>
+              </g>
+
+              <!-- Landing spot glowing cyan device bar (Anchored horizontally under tube) -->
+              <g filter="url(#glow_bar)">
+                <rect x="382" y="855" width="260" height="28" rx="14" fill="#00C2FF"/>
+                <rect x="422" y="861" width="180" height="16" rx="8" fill="#FFFFFF" fill-opacity="0.9"/>
+                <!-- Signal pulses around landing bar -->
+                <circle cx="340" cy="869" r="6" fill="#00C2FF" fill-opacity="0.6"/>
+                <circle cx="684" cy="869" r="6" fill="#00C2FF" fill-opacity="0.6"/>
+              </g>
+            
+  </g>
+</g>
+<rect x="100.5" y="100.5" width="823" height="823" rx="184.5" stroke="#FFFFFF" stroke-opacity="0.08"/>
+</svg>

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:tube_downloader/core/configs/app_config.dart';
+import 'package:tube_downloader/core/configs/licenses.dart';
 import 'package:tube_downloader/core/di/dependency_injection.dart';
 import 'package:tube_downloader/core/platform/download_notifier.dart';
 import 'package:tube_downloader/core/platform/notification_service.dart';
@@ -72,6 +73,7 @@ Future<void> bootstrapAndRun(AppConfig config) async {
       };
 
       await WindowService.configure(config);
+      registerExtraLicenses();
       await setupGetIt(config);
       await getIt<SettingsRepo>().load();
       await getIt<RecoveryService>().run();

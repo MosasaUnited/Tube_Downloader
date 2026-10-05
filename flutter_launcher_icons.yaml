@@ -1,0 +1,26 @@
+# App icons for every platform and both flavours, from "The Drop Tube".
+# Sources: assets/icon/source/*.svg → ./tool/render_icons.sh → assets/icon/*.png
+# Then: dart run flutter_launcher_icons
+flutter_launcher_icons:
+  image_path: "assets/icon/icon_master.png"
+
+  android: "ic_launcher"
+  min_sdk_android: 24
+  adaptive_icon_background: "assets/icon/icon_background.png"
+  adaptive_icon_foreground: "assets/icon/icon_foreground.png"
+  # The foreground SVG is already scaled into the safe zone.
+  adaptive_icon_foreground_inset: 0
+  adaptive_icon_monochrome: "assets/icon/icon_monochrome.png"
+
+  ios: true
+  remove_alpha_ios: true
+  background_color_ios: "#0B0D14"
+
+  macos:
+    generate: true
+    image_path: "assets/icon/icon_macos.png"
+
+  windows:
+    generate: true
+    image_path: "assets/icon/icon_master.png"
+    icon_size: 256
