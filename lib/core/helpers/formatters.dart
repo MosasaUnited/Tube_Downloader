@@ -7,6 +7,9 @@
 /// is the only place numbers are formatted by hand (review-gate).
 library;
 
+import 'package:tube_downloader/core/download_core/domain/entities/download_enums.dart';
+import 'package:tube_downloader/core/download_core/domain/entities/format_selector.dart';
+
 const _fsi = '\u2068';
 const _pdi = '\u2069';
 
@@ -69,3 +72,20 @@ String formatBitrate(int kbps) => _isolate('$kbps kbps');
 /// #01 · #12 · #128 — a playlist position.
 String formatPlaylistIndex(int index) =>
     _isolate('#${index.toString().padLeft(2, '0')}');
+
+/// MP4 · 1080p · MP3 · 192 kbps · M4A — the chip of a queued download (its
+/// quality cap; the exact stream is chosen when it starts).
+String formatSelectorLabel(FormatSelector f) => _isolate(switch (f.kind) {
+  MediaKind.video =>
+    '${f.container.name.toUpperCase()} · ${f.maxHeight ?? 1080}p',
+  MediaKind.audio =>
+    f.container == OutContainer.mp3
+        ? 'MP3 · ${f.audioKbps ?? 192} kbps'
+        : f.container.name.toUpperCase(),
+});
+
+/// 14:22:05 — a timeline entry's time of day (24-hour, Latin digits).
+String formatTimeOfDay(DateTime t) {
+  String two(int v) => v.toString().padLeft(2, '0');
+  return _isolate('${two(t.hour)}:${two(t.minute)}:${two(t.second)}');
+}

@@ -2,6 +2,7 @@ import 'package:get_it/get_it.dart';
 import 'package:tube_downloader/core/configs/app_config.dart';
 import 'package:tube_downloader/core/database/app_database.dart';
 import 'package:tube_downloader/core/di/modules/download_core_dependencies.dart';
+import 'package:tube_downloader/core/di/modules/downloads_dependencies.dart';
 import 'package:tube_downloader/core/di/modules/new_download_dependencies.dart';
 import 'package:tube_downloader/core/di/modules/settings_dependencies.dart';
 
@@ -22,6 +23,7 @@ Future<void> setupGetIt(AppConfig config, {AppDatabase? database}) async {
     );
 
   registerDownloadCoreDependencies(getIt);
+  registerDownloadsDependencies(getIt);
   registerNewDownloadDependencies(getIt);
   registerSettingsDependencies(getIt);
 }

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tube_downloader/core/helpers/l10n_extension.dart';
 import 'package:tube_downloader/core/helpers/spacing.dart';
 import 'package:tube_downloader/core/theme/app_colors.dart';
 import 'package:tube_downloader/core/theme/colors_manager.dart';
 import 'package:tube_downloader/core/theme/dimens.dart';
 import 'package:tube_downloader/core/theme/styles.dart';
+import 'package:tube_downloader/features/shell/logic/nav_badge_cubit/nav_badge_cubit.dart';
 import 'package:tube_downloader/features/shell/presentation/widgets/nav_destinations.dart';
 
 /// The 240px desktop sidebar from the design: full-width rows, the selected
@@ -121,9 +123,46 @@ class _SidebarItem extends StatelessWidget {
                               .copyWith(color: foreground),
                     ),
                   ),
+                  if (destination.showsQueueBadge)
+                    _CountPill(selected: selected),
                 ],
               ),
             ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// "4" at the end of the Downloads row: downloads in progress.
+class _CountPill extends StatelessWidget {
+  const _CountPill({required this.selected});
+
+  final bool selected;
+
+  @override
+  Widget build(BuildContext context) {
+    final count = context.watch<NavBadgeCubit>().state;
+    if (count == 0) return const SizedBox.shrink();
+    return Semantics(
+      label: context.l10n.activeDownloadsBadge(count),
+      excludeSemantics: true,
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: selected
+              ? ColorsManager.onPrimary.withValues(alpha: 0.2)
+              : ColorsManager.primary,
+          borderRadius: BorderRadius.circular(Dimens.radiusPill),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: Dimens.space8,
+            vertical: 2,
+          ),
+          child: Text(
+            '$count',
+            style: Styles.font12Bold.copyWith(color: ColorsManager.onPrimary),
           ),
         ),
       ),

@@ -2,13 +2,11 @@
 library;
 
 import 'package:drift/drift.dart';
-import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:tube_downloader/core/configs/app_config.dart';
-import 'package:tube_downloader/core/database/app_database.dart';
 import 'package:tube_downloader/core/di/dependency_injection.dart';
 import 'package:tube_downloader/core/download_core/domain/entities/media_info.dart';
 import 'package:tube_downloader/core/download_core/domain/entities/parsed_link.dart';
@@ -22,6 +20,7 @@ import 'package:tube_downloader/features/new_download/logic/link_input_cubit/lin
 import 'package:tube_downloader/features/new_download/presentation/widgets/url_input_bar.dart';
 import 'package:tube_downloader/tube_downloader_app.dart';
 
+import '../helpers/app_harness.dart';
 import '../helpers/load_app_fonts.dart';
 
 class _Resolver extends Mock implements MediaResolver {}
@@ -49,10 +48,7 @@ void main() {
   });
 
   setUp(() async {
-    await setupGetIt(
-      const AppConfig.development(),
-      database: AppDatabase(NativeDatabase.memory()),
-    );
+    await setupGetIt(const AppConfig.development(), database: testDatabase());
     await getIt<SettingsRepo>().load();
     final resolver = _Resolver();
     when(() => resolver.resolve(any())).thenAnswer((invocation) async {
@@ -105,6 +101,7 @@ void main() {
       find.byType(TubeDownloaderApp),
       matchesGoldenFile('goldens/$name.png'),
     );
+    await unmountApp(tester);
   }
 
   testWidgets(

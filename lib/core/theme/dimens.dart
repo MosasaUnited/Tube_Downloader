@@ -24,6 +24,7 @@ abstract final class Dimens {
   // Shell.
   static const sidebarWidth = 240.0;
   static const railWidth = 72.0;
+  static const detailsPaneWidth = 380.0; // Downloads: the selected task
   static const bottomNavHeight = 64.0;
   static const topBarHeight = 64.0;
 

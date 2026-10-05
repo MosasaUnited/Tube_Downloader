@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
 
-/// Reads plain text from the system clipboard. A class (not a bare static
+/// Reads and writes plain text on the system clipboard. A class (not a bare static
 /// call) so cubits can be tested with a fake.
 ///
 /// iOS shows a "pasted from…" banner on every read, so automatic reads are
@@ -9,4 +9,7 @@ import 'package:flutter/services.dart';
 class ClipboardService {
   Future<String?> readText() async =>
       (await Clipboard.getData(Clipboard.kTextPlain))?.text;
+
+  Future<void> writeText(String text) =>
+      Clipboard.setData(ClipboardData(text: text));
 }

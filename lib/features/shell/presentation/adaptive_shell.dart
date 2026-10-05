@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tube_downloader/core/di/dependency_injection.dart';
 import 'package:tube_downloader/core/helpers/breakpoints.dart';
 import 'package:tube_downloader/core/helpers/l10n_extension.dart';
 import 'package:tube_downloader/core/theme/app_colors.dart';
 import 'package:tube_downloader/core/theme/dimens.dart';
 import 'package:tube_downloader/core/theme/styles.dart';
+import 'package:tube_downloader/features/shell/logic/nav_badge_cubit/nav_badge_cubit.dart';
 import 'package:tube_downloader/features/shell/presentation/widgets/app_sidebar.dart';
 import 'package:tube_downloader/features/shell/presentation/widgets/nav_destinations.dart';
 import 'package:tube_downloader/features/shell/presentation/widgets/theme_toggle_button.dart';
@@ -25,28 +28,32 @@ class AdaptiveShell extends StatelessWidget {
   Widget build(BuildContext context) {
     final destinations = NavDestination.of(context);
     final current = destinations[shell.currentIndex];
-    return switch (windowClassOf(context)) {
-      WindowClass.compact => _BottomNavLayout(
-        shell: shell,
-        destinations: destinations,
-        title: current.title,
-        onSelect: _select,
-      ),
-      WindowClass.medium => _SideNavLayout(
-        shell: shell,
-        destinations: destinations,
-        title: current.title,
-        onSelect: _select,
-        canExtend: false,
-      ),
-      WindowClass.expanded => _SideNavLayout(
-        shell: shell,
-        destinations: destinations,
-        title: current.title,
-        onSelect: _select,
-        canExtend: true,
-      ),
-    };
+    // The Downloads badge; above the layout switch so resizing keeps it.
+    return BlocProvider<NavBadgeCubit>(
+      create: (_) => getIt<NavBadgeCubit>()..start(),
+      child: switch (windowClassOf(context)) {
+        WindowClass.compact => _BottomNavLayout(
+          shell: shell,
+          destinations: destinations,
+          title: current.title,
+          onSelect: _select,
+        ),
+        WindowClass.medium => _SideNavLayout(
+          shell: shell,
+          destinations: destinations,
+          title: current.title,
+          onSelect: _select,
+          canExtend: false,
+        ),
+        WindowClass.expanded => _SideNavLayout(
+          shell: shell,
+          destinations: destinations,
+          title: current.title,
+          onSelect: _select,
+          canExtend: true,
+        ),
+      },
+    );
   }
 }
 
@@ -97,8 +104,8 @@ class _BottomNavLayout extends StatelessWidget {
           destinations: [
             for (final d in destinations)
               NavigationDestination(
-                icon: Icon(d.icon),
-                selectedIcon: Icon(d.selectedIcon),
+                icon: NavIcon(destination: d, selected: false),
+                selectedIcon: NavIcon(destination: d, selected: true),
                 label: d.label,
               ),
           ],
@@ -160,8 +167,8 @@ class _SideNavLayoutState extends State<_SideNavLayout> {
               destinations: [
                 for (final d in widget.destinations)
                   NavigationRailDestination(
-                    icon: Icon(d.icon),
-                    selectedIcon: Icon(d.selectedIcon),
+                    icon: NavIcon(destination: d, selected: false),
+                    selectedIcon: NavIcon(destination: d, selected: true),
                     label: Text(d.label),
                   ),
               ],

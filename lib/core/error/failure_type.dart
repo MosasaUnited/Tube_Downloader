@@ -15,6 +15,9 @@ enum FailureType {
   storageFull,
   permissionDenied,
   ffmpegFailed,
+
+  /// A finished file was moved or deleted outside the app.
+  fileMissing,
   cancelled,
   unknown;
 

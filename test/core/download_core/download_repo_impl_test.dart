@@ -212,6 +212,32 @@ void main() {
     expect((await repo.task('task-0'))!.legs.single.kind, LegKind.muxed);
   });
 
+  test('counts per filter follow every transition', () async {
+    await enqueue([
+      _request('aaaaaaaaaaa'),
+      _request('bbbbbbbbbbb'),
+      _request('ccccccccccc'),
+      _request('ddddddddddd'),
+    ]);
+    await repo.transition('task-0', TaskStatus.resolving);
+    await repo.transition('task-0', TaskStatus.downloadingVideo);
+    await repo.transition(
+      'task-1',
+      TaskStatus.paused,
+      pauseReason: PauseReason.user,
+    );
+    await repo.transition('task-3', TaskStatus.cancelled);
+
+    expect(await repo.watchCounts().first, {
+      TaskFilter.all: 3,
+      TaskFilter.active: 1,
+      TaskFilter.queued: 1,
+      TaskFilter.paused: 1,
+      TaskFilter.completed: 0,
+      TaskFilter.failed: 0,
+    });
+  });
+
   test('filters hide cancelled tasks; existingKeys finds duplicates', () async {
     await enqueue([_request('aaaaaaaaaaa'), _request('bbbbbbbbbbb')]);
     await repo.transition('task-1', TaskStatus.cancelled);

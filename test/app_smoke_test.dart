@@ -1,9 +1,7 @@
 import 'package:drift/drift.dart';
-import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tube_downloader/core/configs/app_config.dart';
-import 'package:tube_downloader/core/database/app_database.dart';
 import 'package:tube_downloader/core/di/dependency_injection.dart';
 import 'package:tube_downloader/core/download_core/domain/repos/settings_repo.dart';
 import 'package:tube_downloader/core/router/app_router.dart';
@@ -11,15 +9,14 @@ import 'package:tube_downloader/features/settings/presentation/screens/settings_
 import 'package:tube_downloader/features/shell/presentation/widgets/app_sidebar.dart';
 import 'package:tube_downloader/tube_downloader_app.dart';
 
+import 'helpers/app_harness.dart';
+
 /// The real app (DI, drift, router, shell, themes, l10n) at real window sizes.
 void main() {
   setUpAll(() => driftRuntimeOptions.dontWarnAboutMultipleDatabases = true);
 
   setUp(() async {
-    await setupGetIt(
-      const AppConfig.development(),
-      database: AppDatabase(NativeDatabase.memory()),
-    );
+    await setupGetIt(const AppConfig.development(), database: testDatabase());
     await getIt<SettingsRepo>().load();
   });
   tearDown(() => getIt.reset());
@@ -47,6 +44,7 @@ void main() {
     expect(find.byType(NavigationRail), findsNothing);
     expect(find.byType(NavigationBar), findsNothing);
     expect(find.text('New Download'), findsWidgets);
+    await unmountApp(tester);
   });
 
   testWidgets('sidebar collapses to the 72px rail and expands back', (
@@ -62,6 +60,7 @@ void main() {
     await tester.tap(find.byTooltip('Expand sidebar'));
     await tester.pumpAndSettle();
     expect(find.byType(AppSidebar), findsOneWidget);
+    await unmountApp(tester);
   });
 
   testWidgets('tablet width: rail without the sidebar toggle', (tester) async {
@@ -70,6 +69,7 @@ void main() {
     expect(find.byType(NavigationRail), findsOneWidget);
     expect(find.byType(AppSidebar), findsNothing);
     expect(find.byTooltip('Expand sidebar'), findsNothing);
+    await unmountApp(tester);
   });
 
   testWidgets('phone: bottom navigation, no rail', (tester) async {
@@ -77,6 +77,7 @@ void main() {
 
     expect(find.byType(NavigationBar), findsOneWidget);
     expect(find.byType(NavigationRail), findsNothing);
+    await unmountApp(tester);
   });
 
   testWidgets('choosing Arabic flips the whole app to RTL', (tester) async {
@@ -106,5 +107,6 @@ void main() {
       'ar',
       reason: 'persisted',
     );
+    await unmountApp(tester);
   });
 }

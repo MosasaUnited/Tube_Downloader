@@ -155,6 +155,24 @@ class DownloadRepoImpl implements DownloadRepo {
   }
 
   @override
+  Stream<Map<TaskFilter, int>> watchCounts() => _db
+      .customSelect(
+        'SELECT status, COUNT(*) AS n FROM download_tasks GROUP BY status',
+        readsFrom: {_db.downloadTasks},
+      )
+      .watch()
+      .map((rows) {
+        final byStatus = {
+          for (final r in rows) r.read<String>('status'): r.read<int>('n'),
+        };
+        return {
+          for (final filter in TaskFilter.values)
+            filter: _statusesFor(filter)
+                .fold(0, (sum, s) => sum + (byStatus[s.name] ?? 0)),
+        };
+      });
+
+  @override
   Stream<DownloadTask?> watchTask(String id) {
     final query = _tasksJoin()..where(_db.downloadTasks.id.equals(id));
     return query.watch().map((rows) => _group(rows).firstOrNull);

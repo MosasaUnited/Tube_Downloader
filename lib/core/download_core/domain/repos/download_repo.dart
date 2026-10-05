@@ -18,6 +18,10 @@ abstract interface class DownloadRepo {
   Stream<List<GroupSummary>> watchGroups();
   Stream<List<DownloadEvent>> watchEvents(String taskId);
 
+  /// How many tasks each Downloads filter shows (the filter chips and the
+  /// navigation badge).
+  Stream<Map<TaskFilter, int>> watchCounts();
+
   Future<DownloadTask?> task(String id);
   Future<DownloadGroup?> group(String id);
   Future<List<DownloadTask>> tasksWithStatus(Set<TaskStatus> statuses);

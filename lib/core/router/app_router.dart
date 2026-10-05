@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tube_downloader/features/downloads/presentation/screens/downloads_screen.dart';
+import 'package:tube_downloader/features/downloads/presentation/screens/task_details_screen.dart';
 import 'package:tube_downloader/features/library/presentation/screens/library_screen.dart';
 import 'package:tube_downloader/features/new_download/presentation/screens/new_download_screen.dart';
 import 'package:tube_downloader/features/settings/presentation/screens/settings_screen.dart';
@@ -13,6 +14,10 @@ abstract final class AppRoutes {
   static const downloads = '/downloads';
   static const library = '/library';
   static const settings = '/settings';
+
+  /// Phones: one download's details, pushed over the tabs.
+  static const taskDetailsPattern = '/task/:id';
+  static String taskDetails(String id) => '/task/$id';
 }
 
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>(
@@ -61,6 +66,12 @@ GoRouter buildAppRouter() => GoRouter(
           ],
         ),
       ],
+    ),
+    // Wide windows show details in the Downloads pane instead.
+    GoRoute(
+      path: AppRoutes.taskDetailsPattern,
+      builder: (context, state) =>
+          TaskDetailsScreen(taskId: state.pathParameters['id']!),
     ),
   ],
 );

@@ -20,6 +20,7 @@ String failureMessage(BuildContext context, AppFailure failure) {
     FailureType.storageFull => l10n.failureStorageFull,
     FailureType.permissionDenied => l10n.failurePermissionDenied,
     FailureType.ffmpegFailed => l10n.failureFfmpegFailed,
+    FailureType.fileMissing => l10n.failureFileMissing,
     FailureType.cancelled => l10n.failureCancelled,
     FailureType.unknown => l10n.failureUnknown,
   };

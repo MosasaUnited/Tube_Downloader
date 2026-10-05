@@ -2,18 +2,17 @@
 library;
 
 import 'package:drift/drift.dart';
-import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tube_downloader/core/configs/app_config.dart';
-import 'package:tube_downloader/core/database/app_database.dart';
 import 'package:tube_downloader/core/di/dependency_injection.dart';
 import 'package:tube_downloader/core/download_core/domain/entities/app_settings.dart';
 import 'package:tube_downloader/core/download_core/domain/repos/settings_repo.dart';
 import 'package:tube_downloader/core/router/app_router.dart';
 import 'package:tube_downloader/tube_downloader_app.dart';
 
+import '../helpers/app_harness.dart';
 import '../helpers/load_app_fonts.dart';
 
 /// The shell at real window sizes in both themes and both languages.
@@ -25,10 +24,7 @@ void main() {
   });
 
   setUp(() async {
-    await setupGetIt(
-      const AppConfig.development(),
-      database: AppDatabase(NativeDatabase.memory()),
-    );
+    await setupGetIt(const AppConfig.development(), database: testDatabase());
     await getIt<SettingsRepo>().load();
   });
   tearDown(() => getIt.reset());
@@ -58,6 +54,7 @@ void main() {
       find.byType(TubeDownloaderApp),
       matchesGoldenFile('goldens/$name.png'),
     );
+    await unmountApp(tester);
   }
 
   testWidgets(

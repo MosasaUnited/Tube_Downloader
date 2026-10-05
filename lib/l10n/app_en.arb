@@ -218,5 +218,145 @@
   },
   "batchIdleTitle": "Paste several links at once",
   "batchIdleBody": "Each link is checked before it downloads. Duplicates and broken links are flagged.",
-  "dropLinksHere": "Drop links or a .txt file"
+  "dropLinksHere": "Drop links or a .txt file",
+  "failureFileMissing": "The file was moved or deleted.",
+  "filterAll": "All",
+  "filterActive": "Active",
+  "filterQueued": "Queued",
+  "filterPaused": "Paused",
+  "filterCompleted": "Completed",
+  "filterFailed": "Failed",
+  "actionPause": "Pause",
+  "actionResume": "Resume",
+  "actionPauseAll": "Pause all",
+  "actionResumeAll": "Resume all",
+  "actionClearCompleted": "Clear completed",
+  "actionOpen": "Open",
+  "actionShowInFolder": "Show in folder",
+  "actionCopyLink": "Copy link",
+  "actionExpand": "Expand",
+  "actionCollapse": "Collapse",
+  "linkCopied": "Link copied",
+  "clearedCount": "{count, plural, =0{Nothing to clear} =1{1 download cleared} other{{count} downloads cleared}}",
+  "@clearedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "statusQueued": "Queued",
+  "statusRetrying": "Waiting to retry",
+  "statusResolving": "Preparing…",
+  "statusDownloadingVideo": "Downloading video",
+  "statusDownloadingAudio": "Downloading audio",
+  "statusMerging": "Merging audio + video…",
+  "statusConverting": "Converting to MP3…",
+  "statusCompleted": "Completed",
+  "statusPaused": "Paused",
+  "statusWaitingWifi": "Waiting for Wi-Fi",
+  "statusWaitingNetwork": "Waiting for a connection",
+  "statusFailed": "Failed",
+  "statusCancelled": "Cancelled",
+  "timeLeft": "{time} left",
+  "@timeLeft": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "sizeOfTotal": "{done} of {total}",
+  "@sizeOfTotal": {
+    "placeholders": {
+      "done": {
+        "type": "String"
+      },
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "sizeLeft": "{size} left",
+  "@sizeLeft": {
+    "placeholders": {
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "groupDoneOfTotal": "{done} of {total} done",
+  "@groupDoneOfTotal": {
+    "placeholders": {
+      "done": {
+        "type": "String"
+      },
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "queueTitle": "Downloads queue",
+  "queueActiveCount": "{count} active",
+  "@queueActiveCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "queueQueuedCount": "{count} queued",
+  "@queueQueuedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "queueFailedCount": "{count} failed",
+  "@queueFailedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "queueControls": "Queue controls",
+  "healthOffline": "You're offline. Downloads continue when you're back online.",
+  "healthWifi": "Waiting for Wi-Fi. Downloading on mobile data is off in Settings.",
+  "healthCooldown": "YouTube is limiting requests. Resuming at {time}.",
+  "@healthCooldown": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "emptyFilteredTitle": "Nothing in this list",
+  "emptyFilteredBody": "Downloads move here as their state changes.",
+  "detailsTitle": "Download details",
+  "detailsSelectHint": "Select a download to see its details.",
+  "detailsGone": "This download was removed from the list.",
+  "detailsFile": "File",
+  "detailsSource": "Source",
+  "detailsStreams": "Streams",
+  "detailsTimeline": "Timeline",
+  "legVideo": "Video",
+  "legAudio": "Audio",
+  "legMuxed": "Video + audio",
+  "eventRequested": "Download requested",
+  "eventResolved": "Streams found",
+  "eventVideoStarted": "Video download started",
+  "eventVideoDone": "Video downloaded",
+  "eventAudioStarted": "Audio download started",
+  "eventAudioDone": "Audio downloaded",
+  "eventMergeStarted": "Merging audio and video",
+  "eventConvertStarted": "Converting to MP3",
+  "eventReResolved": "Link expired, got a fresh one",
+  "eventPaused": "Paused",
+  "eventResumed": "Resumed",
+  "eventRetried": "Retried",
+  "eventCompleted": "Completed",
+  "eventFailed": "Failed",
+  "eventCancelled": "Cancelled"
 }
