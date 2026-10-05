@@ -261,11 +261,12 @@ class _Actions extends StatelessWidget {
           l10n.actionOpen,
           () => _report(context, cubit.openFile(task)),
         ),
-        _Action(
-          Icons.folder_open_outlined,
-          l10n.actionShowInFolder,
-          () => _report(context, cubit.revealFile(task)),
-        ),
+        if (cubit.canRevealFiles)
+          _Action(
+            Icons.folder_open_outlined,
+            l10n.actionShowInFolder,
+            () => _report(context, cubit.revealFile(task)),
+          ),
       ],
       TaskStatus.completed || TaskStatus.cancelled => const <_Action>[],
     };

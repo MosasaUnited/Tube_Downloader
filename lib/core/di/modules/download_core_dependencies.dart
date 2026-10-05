@@ -4,6 +4,7 @@ import 'package:tube_downloader/core/download_core/data/engine/youtube_explode/e
 import 'package:tube_downloader/core/download_core/data/engine/youtube_explode/yte_media_resolver.dart';
 import 'package:tube_downloader/core/download_core/data/muxer/ffmpeg_kit_muxer.dart';
 import 'package:tube_downloader/core/download_core/data/platform/connectivity_network_monitor.dart';
+import 'package:tube_downloader/core/download_core/data/platform/http_thumbnail_store.dart';
 import 'package:tube_downloader/core/download_core/data/platform/method_channel_activity_assertion.dart';
 import 'package:tube_downloader/core/download_core/data/platform/io_file_system_gateway.dart';
 import 'package:tube_downloader/core/download_core/data/repos/download_repo_impl.dart';
@@ -19,6 +20,7 @@ import 'package:tube_downloader/core/download_core/domain/repos/media_resolver.d
 import 'package:tube_downloader/core/download_core/domain/repos/media_transport.dart';
 import 'package:tube_downloader/core/download_core/domain/repos/network_monitor.dart';
 import 'package:tube_downloader/core/download_core/domain/repos/settings_repo.dart';
+import 'package:tube_downloader/core/download_core/domain/repos/thumbnail_store.dart';
 import 'package:tube_downloader/core/download_core/domain/services/download_job.dart';
 import 'package:tube_downloader/core/download_core/domain/services/download_queue_service.dart';
 import 'package:tube_downloader/core/download_core/domain/services/recovery_service.dart';
@@ -44,6 +46,10 @@ void registerDownloadCoreDependencies(GetIt getIt) {
       MethodChannelActivityAssertion.new,
     )
     ..registerLazySingleton<NetworkMonitor>(ConnectivityNetworkMonitor.new)
+    ..registerLazySingleton<ThumbnailStore>(
+      HttpThumbnailStore.new,
+      dispose: (store) => (store as HttpThumbnailStore).close(),
+    )
     // Engine — one gate paces every YouTube call app-wide.
     ..registerLazySingleton<ResolveGate>(ResolveGate.new)
     ..registerLazySingleton<EngineConfig>(() => EngineConfig.defaults)
@@ -66,6 +72,7 @@ void registerDownloadCoreDependencies(GetIt getIt) {
         transport: getIt(),
         muxer: getIt(),
         fs: getIt(),
+        thumbnails: getIt(),
       ),
     )
     ..registerLazySingleton<DownloadQueueService>(

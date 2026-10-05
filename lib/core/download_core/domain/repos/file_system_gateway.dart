@@ -15,6 +15,10 @@ abstract interface class FileSystemGateway {
   Future<bool> exists(String path);
   Future<void> deleteFile(String path);
 
+  /// Deletes a finished file the user saved (Library › Delete); a file that
+  /// is already gone counts as deleted.
+  Future<Result<void>> deletePublished(String path);
+
   /// Moves a finished file into the save location under [fileName] (and
   /// [subDir]); never overwrites — a clash gets " (2)", " (3)"… Returns the
   /// final path.

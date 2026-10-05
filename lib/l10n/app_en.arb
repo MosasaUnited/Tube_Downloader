@@ -358,5 +358,85 @@
   "eventRetried": "Retried",
   "eventCompleted": "Completed",
   "eventFailed": "Failed",
-  "eventCancelled": "Cancelled"
+  "eventCancelled": "Cancelled",
+  "failureNoAppToOpen": "No app on this device can open this file.",
+  "libraryFilesCount": "{count, plural, =1{1 file} other{{count} files}}",
+  "@libraryFilesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "librarySearchHint": "Search titles and channels",
+  "librarySearchEmpty": "No files match your search.",
+  "libraryVideo": "Video",
+  "libraryAudio": "Audio",
+  "actionSearch": "Search",
+  "actionSelect": "Select",
+  "actionDone": "Done",
+  "actionSelectAll": "Select all",
+  "actionShare": "Share",
+  "actionSaveToPhotos": "Photos",
+  "actionMore": "More",
+  "sortLabel": "Sort",
+  "sortNewest": "Newest",
+  "sortOldest": "Oldest",
+  "sortName": "Name",
+  "sortSize": "Size",
+  "viewGrid": "Grid",
+  "viewList": "List",
+  "selectedCount": "{count, plural, =1{1 item selected} other{{count} items selected}}",
+  "@selectedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "sizeTotal": "{size} total",
+  "@sizeTotal": {
+    "placeholders": {
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "savedToPhotos": "{count, plural, =1{Saved to Photos} other{{count} videos saved to Photos}}",
+  "@savedToPhotos": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "deleteTitle": "{count, plural, =1{Delete this file?} other{Delete {count} files?}}",
+  "@deleteTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "deleteBody": "They're removed from your library.",
+  "deleteFromDisk": "Also delete from this device",
+  "deletedCount": "{count, plural, =1{1 file deleted} other{{count} files deleted}}",
+  "@deletedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "fileMissingBadge": "File missing",
+  "dateToday": "Today",
+  "dateYesterday": "Yesterday",
+  "daysAgo": "{count, plural, =1{1 day ago} other{{count} days ago}}",
+  "@daysAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

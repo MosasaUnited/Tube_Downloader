@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:tube_downloader/core/helpers/formatters.dart';
 import 'package:tube_downloader/core/theme/app_colors.dart';
@@ -5,32 +7,54 @@ import 'package:tube_downloader/core/theme/colors_manager.dart';
 import 'package:tube_downloader/core/theme/dimens.dart';
 import 'package:tube_downloader/core/theme/styles.dart';
 
-/// A 16:9 video thumbnail with an optional duration badge. Network images are
-/// decoded at the size they are shown (performance skill: cacheWidth), and a
-/// missing or failed image falls back to a neutral placeholder.
+/// A 16:9 video thumbnail with an optional duration badge: the local copy
+/// ([filePath], the library's offline thumbnail) first, then [url], then a
+/// neutral placeholder showing [placeholderIcon]. Images are decoded at the
+/// size they are shown (performance skill: cacheWidth).
 class MediaThumbnail extends StatelessWidget {
   const MediaThumbnail({
     required this.url,
-    required this.width,
+    this.width,
+    this.decodeWidthHint = 320,
+    this.filePath,
     this.duration,
     this.radius = Dimens.radiusButton,
+    this.placeholderIcon = Icons.movie_outlined,
     super.key,
   });
 
   final String? url;
-  final double width;
+  final String? filePath;
+
+  /// null = fill the width it is given (grid cards; no LayoutBuilder, so it
+  /// works inside IntrinsicHeight). [decodeWidthHint] then sizes the decode.
+  final double? width;
+  final double decodeWidthHint;
   final Duration? duration;
   final double radius;
+  final IconData placeholderIcon;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-    final decodeWidth = (width * MediaQuery.devicePixelRatioOf(context))
-        .round();
+    final decodeWidth =
+        ((width ?? decodeWidthHint) * MediaQuery.devicePixelRatioOf(context))
+            .round();
     final placeholder = ColoredBox(
       color: colors.surfaceRaised,
-      child: Center(child: Icon(Icons.movie_outlined, color: colors.textMuted)),
+      child: Center(child: Icon(placeholderIcon, color: colors.textMuted)),
     );
+    final network = url == null
+        ? placeholder
+        : Image.network(
+            url!,
+            fit: BoxFit.cover,
+            cacheWidth: decodeWidth,
+            errorBuilder: (_, _, _) => placeholder,
+            frameBuilder: (_, child, frame, wasSync) =>
+                wasSync || frame != null ? child : placeholder,
+          );
+    final local = filePath;
     return ClipRRect(
       borderRadius: BorderRadius.circular(radius),
       child: SizedBox(
@@ -40,16 +64,15 @@ class MediaThumbnail extends StatelessWidget {
           child: Stack(
             fit: StackFit.expand,
             children: [
-              if (url == null)
-                placeholder
+              if (local == null)
+                network
               else
-                Image.network(
-                  url!,
+                Image.file(
+                  File(local),
                   fit: BoxFit.cover,
                   cacheWidth: decodeWidth,
-                  errorBuilder: (_, _, _) => placeholder,
-                  frameBuilder: (_, child, frame, wasSync) =>
-                      wasSync || frame != null ? child : placeholder,
+                  // Deleted cache: the network copy, then the placeholder.
+                  errorBuilder: (_, _, _) => network,
                 ),
               if (duration != null)
                 PositionedDirectional(

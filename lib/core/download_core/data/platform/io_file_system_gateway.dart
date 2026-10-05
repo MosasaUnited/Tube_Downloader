@@ -87,6 +87,16 @@ class IoFileSystemGateway implements FileSystemGateway {
   }
 
   @override
+  Future<Result<void>> deletePublished(String path) async {
+    try {
+      await deleteFile(path);
+      return const Result.success(null);
+    } on Object catch (e, s) {
+      return Result.failure(FailureMapper.map(e, s));
+    }
+  }
+
+  @override
   Future<Result<String>> publish({
     required String sourcePath,
     required String fileName,

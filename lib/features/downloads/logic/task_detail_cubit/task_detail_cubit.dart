@@ -24,7 +24,8 @@ class TaskDetailCubit extends Cubit<TaskDetailState> {
   StreamSubscription<List<DownloadEvent>>? _eventsSub;
   String? _id;
 
-  bool get canOpenFiles => _files.isSupported;
+  bool get canOpenFiles => _files.canOpen;
+  bool get canRevealFiles => _files.canReveal;
 
   void watch(String id) {
     _id = id;

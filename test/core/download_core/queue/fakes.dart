@@ -14,6 +14,7 @@ import 'package:tube_downloader/core/download_core/domain/repos/media_muxer.dart
 import 'package:tube_downloader/core/download_core/domain/repos/media_resolver.dart';
 import 'package:tube_downloader/core/download_core/domain/repos/media_transport.dart';
 import 'package:tube_downloader/core/download_core/domain/repos/network_monitor.dart';
+import 'package:tube_downloader/core/download_core/domain/repos/thumbnail_store.dart';
 import 'package:tube_downloader/core/error/app_failure.dart';
 import 'package:tube_downloader/core/error/failure_type.dart';
 import 'package:tube_downloader/core/error/result.dart';
@@ -47,6 +48,12 @@ class FakeFileSystem implements FileSystemGateway {
 
   @override
   Future<void> deleteFile(String path) async => files.remove(path);
+
+  @override
+  Future<Result<void>> deletePublished(String path) async {
+    files.remove(path);
+    return const Result.success(null);
+  }
 
   @override
   Future<Result<String>> publish({
@@ -228,6 +235,20 @@ class FakeResolver implements MediaResolver {
 
   @override
   void close() {}
+}
+
+/// Saves nothing; answers `/thumbs/<videoId>.jpg` and records the calls.
+class FakeThumbnails implements ThumbnailStore {
+  final saved = <String>[];
+
+  @override
+  Future<String?> save(String videoId, String url) async {
+    saved.add(url);
+    return '/thumbs/$videoId.jpg';
+  }
+
+  @override
+  Future<void> delete(String path) async {}
 }
 
 /// Records begin / end calls in order.

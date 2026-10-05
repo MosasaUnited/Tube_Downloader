@@ -253,11 +253,12 @@ class _DetailActions extends StatelessWidget {
           icon: const Icon(Icons.play_circle_outline),
           label: Text(l10n.actionOpen),
         ),
-        OutlinedButton.icon(
-          onPressed: () => _report(context, cubit.revealFile()),
-          icon: const Icon(Icons.folder_open_outlined),
-          label: Text(l10n.actionShowInFolder),
-        ),
+        if (cubit.canRevealFiles)
+          OutlinedButton.icon(
+            onPressed: () => _report(context, cubit.revealFile()),
+            icon: const Icon(Icons.folder_open_outlined),
+            label: Text(l10n.actionShowInFolder),
+          ),
       ],
       TaskStatus.completed || TaskStatus.cancelled => const <Widget>[],
     };

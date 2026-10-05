@@ -18,6 +18,9 @@ enum FailureType {
 
   /// A finished file was moved or deleted outside the app.
   fileMissing,
+
+  /// Nothing installed on the device opens this kind of file.
+  noAppToOpen,
   cancelled,
   unknown;
 

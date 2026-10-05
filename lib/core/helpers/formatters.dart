@@ -7,6 +7,7 @@
 /// is the only place numbers are formatted by hand (review-gate).
 library;
 
+import 'package:intl/intl.dart';
 import 'package:tube_downloader/core/download_core/domain/entities/download_enums.dart';
 import 'package:tube_downloader/core/download_core/domain/entities/format_selector.dart';
 
@@ -89,3 +90,13 @@ String formatTimeOfDay(DateTime t) {
   String two(int v) => v.toString().padLeft(2, '0');
   return _isolate('${two(t.hour)}:${two(t.minute)}:${two(t.second)}');
 }
+
+/// MP4 · 1080p · MP3 · M4A — the chip of a finished file.
+String formatFileLabel(OutContainer container, int? height) {
+  final name = container.name.toUpperCase();
+  return _isolate(height == null ? name : '$name · ${height}p');
+}
+
+/// Oct 24 / ٢٤ أكتوبر — a short date in the reading language.
+String formatShortDate(DateTime t, String locale) =>
+    _isolate(DateFormat.MMMd(locale).format(t));

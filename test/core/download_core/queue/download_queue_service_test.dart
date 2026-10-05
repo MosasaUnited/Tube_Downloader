@@ -58,6 +58,7 @@ void main() {
   late FakeResolver resolver;
   late FakeNetwork network;
   late RecordingActivity activity;
+  late FakeThumbnails thumbnails;
   late ResolveGate gate;
   late DownloadQueueService queue;
   late List<TaskOutcome> outcomes;
@@ -74,6 +75,7 @@ void main() {
     resolver = FakeResolver();
     network = FakeNetwork(NetState.wifi);
     activity = RecordingActivity();
+    thumbnails = FakeThumbnails();
     gate = ResolveGate(minSpacing: Duration.zero);
     queue = DownloadQueueService(
       JobDeps(
@@ -84,6 +86,7 @@ void main() {
         transport: transport,
         muxer: muxer,
         fs: fs,
+        thumbnails: thumbnails,
         checkpointEvery: Duration.zero,
       ),
       network: network,
@@ -140,6 +143,24 @@ void main() {
       expect(outcomes.single, isA<TaskCompleted>());
     },
   );
+
+  test('the library row keeps a local copy of the thumbnail', () async {
+    final request = _request('1');
+    final id = await enqueue(
+      request.copyWith(
+        media: request.media.copyWith(
+          thumbnailUrl: 'https://i.ytimg.com/1.jpg',
+        ),
+      ),
+    );
+    final plain = await enqueue(_request('2'));
+    for (final t in [id, plain]) {
+      await until(() async => await status(t) == TaskStatus.completed);
+    }
+    final rows = {for (final i in await library.all()) i.videoId: i.thumbPath};
+    expect(rows, {'vid1': '/thumbs/vid1.jpg', 'vid2': null});
+    expect(thumbnails.saved, ['https://i.ytimg.com/1.jpg']);
+  });
 
   test('MP3: one audio leg, converted, published as .mp3', () async {
     resolver.legs = const [LegKind.audio];

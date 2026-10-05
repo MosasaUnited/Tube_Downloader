@@ -69,7 +69,8 @@ class DownloadsCubit extends Cubit<DownloadsState> {
   Future<void> resumeAll() => _queue.resumeAll();
   Future<int> clearCompleted() => _queue.clearFinished();
 
-  bool get canOpenFiles => _files.isSupported;
+  bool get canOpenFiles => _files.canOpen;
+  bool get canRevealFiles => _files.canReveal;
 
   /// The failure to report, or null when it opened.
   Future<AppFailure?> openFile(DownloadTask task) async =>

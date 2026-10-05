@@ -68,7 +68,8 @@ void main() {
     for (final call in [queue.pause, queue.resume, queue.cancel]) {
       when(() => call(any())).thenAnswer((_) async {});
     }
-    when(() => files.isSupported).thenReturn(true);
+    when(() => files.canOpen).thenReturn(true);
+    when(() => files.canReveal).thenReturn(true);
   });
   tearDown(() async {
     await health.close();

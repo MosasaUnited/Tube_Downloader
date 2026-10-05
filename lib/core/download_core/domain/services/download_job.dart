@@ -13,6 +13,7 @@ import 'package:tube_downloader/core/download_core/domain/repos/media_muxer.dart
 import 'package:tube_downloader/core/download_core/domain/repos/media_resolver.dart';
 import 'package:tube_downloader/core/download_core/domain/repos/media_transport.dart';
 import 'package:tube_downloader/core/download_core/domain/repos/settings_repo.dart';
+import 'package:tube_downloader/core/download_core/domain/repos/thumbnail_store.dart';
 import 'package:tube_downloader/core/download_core/domain/services/progress_throttler.dart';
 import 'package:tube_downloader/core/error/app_failure.dart';
 import 'package:tube_downloader/core/error/failure_type.dart';
@@ -48,6 +49,7 @@ class JobDeps {
     required this.transport,
     required this.muxer,
     required this.fs,
+    this.thumbnails = const NoThumbnailStore(),
     this.clock = const Clock(),
     this.checkpointEvery = const Duration(seconds: 5),
   });
@@ -59,6 +61,7 @@ class JobDeps {
   final MediaTransport transport;
   final MediaMuxer muxer;
   final FileSystemGateway fs;
+  final ThumbnailStore thumbnails;
   final Clock clock;
 
   /// How often a running leg's byte count is saved (recovery reads the file
@@ -343,6 +346,10 @@ class DownloadJob {
       ),
     );
     final now = _d.clock.now();
+    final thumbUrl = media.thumbnailUrl;
+    final thumbPath = thumbUrl == null
+        ? null
+        : await _d.thumbnails.save(media.videoId, thumbUrl);
     await _d.library.add(
       LibraryItem(
         id: taskId,
@@ -363,6 +370,7 @@ class DownloadJob {
         path: path,
         bytes: await _d.fs.fileLength(path),
         completedAt: now,
+        thumbPath: thumbPath,
       ),
     );
     _value(
